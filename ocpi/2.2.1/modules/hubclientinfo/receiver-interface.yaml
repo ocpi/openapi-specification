@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: OCPI 2.2.1 - HubClientInfo Module - Receiver Interface
+  description: |
+    The Receiver Interface is typically implemented by all parties connecting to a Hub.
+    With this interface the Hub can push ClientInfo information to a connected client (eMSP/CPO etc).
+
+    Endpoint structure: {hubclientinfo_endpoint_url}/{country_code}/{party_id}
+
+    Note: HubClientInfo is a configuration module. Message routing headers (OCPI-to/from-*)
+    SHALL NOT be used with this module.
+  version: 2.2.1
+  contact:
+    name: EVRoaming Foundation
+    url: https://evroaming.org
+externalDocs:
+  description: OCPI 2.2.1 Specification
+  url: https://github.com/ocpi/ocpi/blob/master/mod_hub_client_info.asciidoc
+security:
+  - OCPIToken: []
+
+paths:
+  /hubclientinfo/{country_code}/{party_id}:
+    get:
+      operationId: receiverGetClientInfo
+      summary: Get a ClientInfo object
+      description: |
+        If the Hub wants to check the status of a ClientInfo object in the connected client's
+        system it might GET the object from the connected client's system for validation purposes.
+        The Hub is the owner of the objects, so it would be illogical if the connected client
+        system had a different status or was missing an object.
+      tags: [ HubClientInfo ]
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
+        - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
+      responses:
+        "200":
+          description: Successful response containing the requested ClientInfo object.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "./schema.yaml#/components/schemas/ClientInfo"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+        "404":
+          $ref: "../../components/schema.yaml#/components/responses/OCPINotFoundResponse"
+
+    put:
+      operationId: receiverPutClientInfo
+      summary: Push new/updated ClientInfo object
+      description: |
+        New or updated ClientInfo objects are pushed from the Hub to a connected client.
+        When the Hub creates a new ClientInfo object or when any changes to ClientInfo occur,
+        the Hub pushes the update to connected parties.
+
+        When the Hub invalidates a ClientInfo object (deleting is not possible), the Hub will
+        send the updated ClientInfo object with the status field set to SUSPENDED.
+      tags: [ HubClientInfo ]
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
+        - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
+      requestBody:
+        description: New or updated ClientInfo object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schema.yaml#/components/schemas/ClientInfo"
+      responses:
+        "200":
+          $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
+        "201":
+          $ref: "../../components/schema.yaml#/components/responses/OCPICreatedResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"

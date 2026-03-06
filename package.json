@@ -1,0 +1,12 @@
+{
+  "name": "openapi-specification",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@redocly/cli": "^2.20.4"
+  },
+  "scripts": {
+    "build:ocpi:cdrs-receiver:2.2.1": "redocly build-docs ocpi-cdrs-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/cdrs/receiver.html",
+    "build:ocpi:locations-receiver:2.2.1": "redocly build-docs ocpi-locations-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/locations/modules/receiver.html"
+  }
+}

@@ -1,0 +1,68 @@
+openapi: 3.1.0
+info:
+  title: OCPI 2.2.1 - Commands Module - Sender Interface
+  description: |
+    The Sender Interface is typically implemented by market roles like the eMSP.
+    It receives the asynchronous responses from the Charge Point via the CPO.
+
+    The URL structure is open for the Sender to define. The URL is provided to the Receiver
+    by the Sender in the POST to the Receiver interface via the response_url field.
+    Therefore OCPI does not define fixed URL variables.
+
+    The path shown here is a typical implementation pattern.
+  version: 2.2.1
+  contact:
+    name: EVRoaming Foundation
+    url: https://evroaming.org
+externalDocs:
+  description: OCPI 2.2.1 Specification
+  url: https://github.com/ocpi/ocpi/blob/master/mod_commands.asciidoc
+security:
+  - OCPIToken: []
+
+paths:
+  /commands/{command}/{uid}:
+    post:
+      operationId: senderPostCommandResult
+      summary: Receive asynchronous command result
+      description: |
+        Receive the asynchronous response from the Charge Point.
+        The CPO calls this endpoint (using the response_url provided by the eMSP) when
+        the result of the command is received from the Charge Point.
+
+        The actual URL structure is open for the eMSP to define. The URL is provided to
+        the CPO by the eMSP in the original command request via the response_url field.
+      tags: [ Commands ]
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
+        - in: path
+          name: command
+          description: The type of command this result is for (example path segment, actual URL is defined by response_url).
+          required: true
+          schema:
+            $ref: "./schema.yaml#/components/schemas/CommandType"
+        - in: path
+          name: uid
+          description: Unique ID to distinguish between requests (example path segment, actual URL is defined by response_url).
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Result of the command request, from the Charge Point.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schema.yaml#/components/schemas/CommandResult"
+      responses:
+        "200":
+          $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"

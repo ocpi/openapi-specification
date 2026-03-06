@@ -1,0 +1,41 @@
+extends:
+  - recommended
+openapi:
+  schemaDefinitionsTagName: Schemas
+apis:
+  ocpi-credentials@2.2.1:
+    root: ./modules/credentials/interface.yaml
+  ocpi-versions@2.2.1:
+    root: ./modules/versions/interface.yaml
+  ocpi-cdrs-receiver@2.2.1:
+    root: ./modules/cdrs/receiver-interface.yaml
+  ocpi-cdrs-sender@2.2.1:
+    root: ./modules/cdrs/sender-interface.yaml
+  ocpi-chargingprofiles-receiver@2.2.1:
+    root: ./modules/chargingprofiles/receiver-interface.yaml
+  ocpi-chargingprofiles-sender@2.2.1:
+    root: ./modules/chargingprofiles/sender-interface.yaml
+  ocpi-commands-receiver@2.2.1:
+    root: ./modules/commands/receiver-interface.yaml
+  ocpi-commands-sender@2.2.1:
+    root: ./modules/commands/sender-interface.yaml
+  ocpi-hubclientinfo-receiver@2.2.1:
+    root: ./modules/hubclientinfo/receiver-interface.yaml
+  ocpi-hubclientinfo-sender@2.2.1:
+    root: ./modules/hubclientinfo/sender-interface.yaml
+  ocpi-locations-receiver@2.2.1:
+    root: ./modules/locations/receiver-interface.yaml
+  ocpi-locations-sender@2.2.1:
+    root: ./modules/locations/sender-interface.yaml
+  ocpi-sessions-receiver@2.2.1:
+    root: ./modules/sessions/receiver-interface.yaml
+  ocpi-sessions-sender@2.2.1:
+    root: ./modules/sessions/sender-interface.yaml
+  ocpi-tariffs-receiver@2.2.1:
+    root: ./modules/tariffs/receiver-interface.yaml
+  ocpi-tariffs-sender@2.2.1:
+    root: ./modules/tariffs/sender-interface.yaml
+  ocpi-tokens-receiver@2.2.1:
+    root: ./modules/tokens/receiver-interface.yaml
+  ocpi-tokens-sender@2.2.1:
+    root: ./modules/tokens/sender-interface.yaml
