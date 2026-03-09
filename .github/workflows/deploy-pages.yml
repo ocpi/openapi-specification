@@ -36,11 +36,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build CDRs Receiver docs
-        run: npm run build:ocpi:cdrs-receiver:2.2.1
+      - name: Build OpenAPI Modules
+        run: npm run build:ocpi:2.2.1
 
-      - name: Build Locations Receiver docs
-        run: npm run build:ocpi:locations-receiver:2.2.1
+      - name: Build OpenAPI Roles
+        run: npm run build:ocpi:cpo:2.2.1 && build:ocpi:msp:2.2.1 && build:ocpi:hub:2.2.1
+
+      - name: Copy index page
+        run: cp ocpi/2.2.1/index.html dist/ocpi/2.2.1/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

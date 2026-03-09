@@ -6,7 +6,32 @@
     "@redocly/cli": "^2.20.4"
   },
   "scripts": {
+    "build:ocpi:2.2.1": "npm run build:ocpi:credentials:2.2.1 && npm run build:ocpi:versions:2.2.1 && npm run build:ocpi:cdrs-receiver:2.2.1 && npm run build:ocpi:cdrs-sender:2.2.1 && npm run build:ocpi:chargingprofiles-receiver:2.2.1 && npm run build:ocpi:chargingprofiles-sender:2.2.1 && npm run build:ocpi:commands-receiver:2.2.1 && npm run build:ocpi:commands-sender:2.2.1 && npm run build:ocpi:hubclientinfo-receiver:2.2.1 && npm run build:ocpi:hubclientinfo-sender:2.2.1 && npm run build:ocpi:locations-receiver:2.2.1 && npm run build:ocpi:locations-sender:2.2.1 && npm run build:ocpi:sessions-receiver:2.2.1 && npm run build:ocpi:sessions-sender:2.2.1 && npm run build:ocpi:tariffs-receiver:2.2.1 && npm run build:ocpi:tariffs-sender:2.2.1 && npm run build:ocpi:tokens-receiver:2.2.1 && npm run build:ocpi:tokens-sender:2.2.1",
+    "build:ocpi:credentials:2.2.1": "redocly build-docs ocpi-credentials@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/credentials/interface.html",
+    "build:ocpi:versions:2.2.1": "redocly build-docs ocpi-versions@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/versions/interface.html",
     "build:ocpi:cdrs-receiver:2.2.1": "redocly build-docs ocpi-cdrs-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/cdrs/receiver.html",
-    "build:ocpi:locations-receiver:2.2.1": "redocly build-docs ocpi-locations-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/locations/modules/receiver.html"
+    "build:ocpi:cdrs-sender:2.2.1": "redocly build-docs ocpi-cdrs-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/cdrs/sender.html",
+    "build:ocpi:chargingprofiles-receiver:2.2.1": "redocly build-docs ocpi-chargingprofiles-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/chargingprofiles/receiver.html",
+    "build:ocpi:chargingprofiles-sender:2.2.1": "redocly build-docs ocpi-chargingprofiles-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/chargingprofiles/sender.html",
+    "build:ocpi:commands-receiver:2.2.1": "redocly build-docs ocpi-commands-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/commands/receiver.html",
+    "build:ocpi:commands-sender:2.2.1": "redocly build-docs ocpi-commands-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/commands/sender.html",
+    "build:ocpi:hubclientinfo-receiver:2.2.1": "redocly build-docs ocpi-hubclientinfo-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/hubclientinfo/receiver.html",
+    "build:ocpi:hubclientinfo-sender:2.2.1": "redocly build-docs ocpi-hubclientinfo-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/hubclientinfo/sender.html",
+    "build:ocpi:locations-receiver:2.2.1": "redocly build-docs ocpi-locations-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/locations/receiver.html",
+    "build:ocpi:locations-sender:2.2.1": "redocly build-docs ocpi-locations-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/locations/sender.html",
+    "build:ocpi:sessions-receiver:2.2.1": "redocly build-docs ocpi-sessions-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/sessions/receiver.html",
+    "build:ocpi:sessions-sender:2.2.1": "redocly build-docs ocpi-sessions-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/sessions/sender.html",
+    "build:ocpi:tariffs-receiver:2.2.1": "redocly build-docs ocpi-tariffs-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/tariffs/receiver.html",
+    "build:ocpi:tariffs-sender:2.2.1": "redocly build-docs ocpi-tariffs-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/tariffs/sender.html",
+    "build:ocpi:tokens-receiver:2.2.1": "redocly build-docs ocpi-tokens-receiver@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/tokens/receiver.html",
+    "build:ocpi:tokens-sender:2.2.1": "redocly build-docs ocpi-tokens-sender@2.2.1 --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/modules/tokens/sender.html",
+
+    "bundle:ocpi:cpo:2.2.1": "redocly join ocpi/2.2.1/cpo-specification.yaml ocpi/2.2.1/modules/credentials/interface.yaml ocpi/2.2.1/modules/versions/interface.yaml ocpi/2.2.1/modules/locations/sender-interface.yaml ocpi/2.2.1/modules/sessions/sender-interface.yaml ocpi/2.2.1/modules/cdrs/sender-interface.yaml ocpi/2.2.1/modules/tariffs/sender-interface.yaml ocpi/2.2.1/modules/tokens/receiver-interface.yaml ocpi/2.2.1/modules/commands/receiver-interface.yaml ocpi/2.2.1/modules/chargingprofiles/receiver-interface.yaml -o dist/ocpi/2.2.1/cpo-interface.yaml --without-x-tag-groups",
+    "bundle:ocpi:msp:2.2.1": "redocly join ocpi/2.2.1/msp-specification.yaml ocpi/2.2.1/modules/credentials/interface.yaml ocpi/2.2.1/modules/versions/interface.yaml ocpi/2.2.1/modules/locations/receiver-interface.yaml ocpi/2.2.1/modules/sessions/receiver-interface.yaml ocpi/2.2.1/modules/cdrs/receiver-interface.yaml ocpi/2.2.1/modules/tariffs/receiver-interface.yaml ocpi/2.2.1/modules/tokens/sender-interface.yaml ocpi/2.2.1/modules/commands/sender-interface.yaml ocpi/2.2.1/modules/chargingprofiles/sender-interface.yaml -o dist/ocpi/2.2.1/msp-interface.yaml --without-x-tag-groups",
+    "bundle:ocpi:hub:2.2.1": "redocly join ocpi/2.2.1/hub-specification.yaml ocpi/2.2.1/modules/hubclientinfo/sender-interface.yaml -o dist/ocpi/2.2.1/hub-interface.yaml --without-x-tag-groups",
+
+    "build:ocpi:cpo:2.2.1": "npm run bundle:ocpi:cpo:2.2.1 && redocly build-docs dist/ocpi/2.2.1/cpo-interface.yaml --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/cpo-interface.html",
+    "build:ocpi:msp:2.2.1": "npm run bundle:ocpi:msp:2.2.1 && redocly build-docs dist/ocpi/2.2.1/msp-interface.yaml --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/msp-interface.html",
+    "build:ocpi:hub:2.2.1": "npm run bundle:ocpi:hub:2.2.1 && redocly build-docs dist/ocpi/2.2.1/hub-interface.yaml --config ocpi/2.2.1/redocly.yaml -o dist/ocpi/2.2.1/hub-interface.html"
   }
 }
