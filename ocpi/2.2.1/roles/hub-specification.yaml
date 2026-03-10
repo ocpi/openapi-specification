@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: OCPI 2.1.1 - Hub Interface
-  version: 2.1.1
+  title: OCPI 2.2.1 - Hub Interface
+  version: 2.2.1
   license:
     name: OCPI
     url: https://evroaming.org/ocpi-license/
