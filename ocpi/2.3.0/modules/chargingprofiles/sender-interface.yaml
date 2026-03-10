@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: OCPI 2.3.0 - ChargingProfiles Module - Sender Interface
+  description: |
+    The Sender Interface (typically implemented by the eMSP/SCSP) receives asynchronous
+    charging profile results and updated active charging profiles from the CPO.
+  version: 2.3.0
+  contact:
+    name: EVRoaming Foundation
+    url: https://evroaming.org
+externalDocs:
+  description: OCPI 2.3.0 Specification
+  url: https://github.com/ocpi/ocpi/blob/master/mod_charging_profiles.asciidoc
+security:
+  - OCPIToken: []
+
+paths:
+  /chargingprofiles/{session_id}:
+    post:
+      operationId: senderPostChargingProfileResult
+      summary: Receive asynchronous charging profile result
+      tags: [ ChargingProfiles ]
+      description: |
+        Receives the asynchronous result from a GET, PUT, or DELETE charging profile request.
+        The URL to this endpoint is provided in the response_url field.
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+          description: The unique id of the session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "./schema.yaml#/components/schemas/ActiveChargingProfileResult"
+                - $ref: "./schema.yaml#/components/schemas/ChargingProfileResult"
+                - $ref: "./schema.yaml#/components/schemas/ClearProfileResult"
+      responses:
+        "200":
+          $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+
+    put:
+      operationId: senderPutActiveChargingProfile
+      summary: Receive updated active charging profile
+      tags: [ ChargingProfiles ]
+      description: |
+        The CPO sends an updated ActiveChargingProfile when the EVSE's charging profile changes.
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+          description: The unique id of the session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schema.yaml#/components/schemas/ActiveChargingProfile"
+      responses:
+        "200":
+          $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"

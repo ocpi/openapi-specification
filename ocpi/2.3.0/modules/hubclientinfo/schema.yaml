@@ -1,0 +1,65 @@
+openapi: 3.1.0
+components:
+  schemas:
+    ClientInfo:
+      type: object
+      description: Contains info about a connected party.
+      properties:
+        party_id:
+          type: string
+          maxLength: 3
+          description: Party ID (following the ISO-15118 standard).
+        country_code:
+          type: string
+          maxLength: 2
+          description: ISO-3166 alpha-2 country code.
+        role:
+          $ref: "#/components/schemas/Role"
+          description: The role of the connected party.
+        status:
+          $ref: "#/components/schemas/ConnectionStatus"
+          description: Status of the connection to the party.
+        last_updated:
+          type: string
+          format: date-time
+          description: Timestamp when this ClientInfo was last updated (or created).
+      required:
+        - party_id
+        - country_code
+        - role
+        - status
+        - last_updated
+
+    Role:
+      type: string
+      format: enum
+      description: The role of a party in the OCPI ecosystem.
+      enum:
+        - CPO
+        - EMSP
+        - NAP
+        - NSP
+        - OTHER
+        - SCSP
+      x-enumDescriptions:
+        CPO: Charge Point Operator Role.
+        EMSP: eMobility Service Provider Role.
+        NAP: National Access Point Role.
+        NSP: Navigation Service Provider Role.
+        OTHER: Other Role.
+        SCSP: Smart Charging Service Provider Role.
+
+    ConnectionStatus:
+      type: string
+      format: enum
+      description: Status of the connection to a party.
+      enum:
+        - CONNECTED
+        - OFFLINE
+        - PLANNED
+        - SUSPENDED
+      x-enumDescriptions:
+        CONNECTED: Party is connected.
+        OFFLINE: Party is currently not connected.
+        PLANNED: Party is planned, not yet active.
+        SUSPENDED: Party is suspended.

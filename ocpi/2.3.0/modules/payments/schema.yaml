@@ -1,0 +1,276 @@
+openapi: 3.1.0
+components:
+  schemas:
+    Terminal:
+      type: object
+      description: |
+        A Terminal object describes a payment terminal at or near a charging location.
+        The PTP (Payment Terminal Provider) manages these terminals and shares information
+        with the CPO.
+      properties:
+        terminal_id:
+          type: string
+          maxLength: 36
+          description: Uniquely identifies the payment terminal.
+        customer_reference:
+          type: string
+          maxLength: 36
+          description: Reference used by the customer (CPO) for this terminal.
+        party_id:
+          type: string
+          maxLength: 3
+          description: Party ID of the PTP that owns this terminal.
+        country_code:
+          type: string
+          maxLength: 2
+          description: ISO-3166 alpha-2 country code of the PTP.
+        address:
+          type: string
+          maxLength: 45
+          description: Street/block name and house number if available.
+        city:
+          type: string
+          maxLength: 45
+          description: City or town.
+        postal_code:
+          type: string
+          maxLength: 10
+          description: Postal code of the terminal location.
+        state:
+          type: string
+          maxLength: 20
+          description: State or province, only to be used when relevant.
+        country:
+          type: string
+          maxLength: 3
+          description: ISO 3166-1 alpha-3 code for the country.
+        coordinates:
+          $ref: "../locations/schema.yaml#/components/schemas/GeoLocation"
+          description: Coordinates of the terminal.
+        invoice_base_url:
+          type: string
+          format: uri
+          description: Base URL for invoice retrieval.
+        invoice_creator:
+          $ref: "#/components/schemas/InvoiceCreator"
+          description: Who creates the invoice for the charging session.
+        reference:
+          type: string
+          maxLength: 36
+          description: Reference information for the terminal.
+        location_ids:
+          type: array
+          description: List of Location IDs this terminal is assigned to.
+          items:
+            type: string
+            maxLength: 36
+        evse_uids:
+          type: array
+          description: List of EVSE UIDs this terminal is assigned to.
+          items:
+            type: string
+            maxLength: 36
+        last_updated:
+          type: string
+          format: date-time
+          description: Timestamp when this Terminal was last updated (or created).
+      required:
+        - terminal_id
+        - last_updated
+
+    TerminalPatch:
+      type: object
+      description: Partial Terminal object for PATCH requests. Only fields present will be updated.
+      properties:
+        customer_reference:
+          type: string
+          maxLength: 36
+        address:
+          type: string
+          maxLength: 45
+        city:
+          type: string
+          maxLength: 45
+        postal_code:
+          type: string
+          maxLength: 10
+        state:
+          type: string
+          maxLength: 20
+        country:
+          type: string
+          maxLength: 3
+        coordinates:
+          $ref: "../locations/schema.yaml#/components/schemas/GeoLocation"
+        invoice_base_url:
+          type: string
+          format: uri
+        invoice_creator:
+          $ref: "#/components/schemas/InvoiceCreator"
+        reference:
+          type: string
+          maxLength: 36
+        location_ids:
+          type: array
+          items:
+            type: string
+            maxLength: 36
+        evse_uids:
+          type: array
+          items:
+            type: string
+            maxLength: 36
+        last_updated:
+          type: string
+          format: date-time
+      required:
+        - last_updated
+
+    FinancialAdviceConfirmation:
+      type: object
+      description: |
+        A FinancialAdviceConfirmation contains the result of a financial advice
+        (pre-authorization or capture) for a charging session payment.
+      properties:
+        id:
+          type: string
+          maxLength: 36
+          description: Uniquely identifies this financial advice confirmation.
+        authorization_reference:
+          type: string
+          maxLength: 36
+          description: Reference to the authorization.
+        total_costs:
+          $ref: "../../components/schema.yaml#/components/schemas/Price"
+          description: Total costs for this financial advice.
+        currency:
+          type: string
+          maxLength: 3
+          description: ISO 4217 currency code.
+        eft_data:
+          type: array
+          minItems: 1
+          description: EFT (Electronic Funds Transfer) data strings.
+          items:
+            type: string
+            maxLength: 255
+        capture_status_code:
+          $ref: "#/components/schemas/CaptureStatusCode"
+          description: Status of the capture.
+        capture_status_message:
+          type: string
+          maxLength: 255
+          description: Human-readable status message for the capture.
+        last_updated:
+          type: string
+          format: date-time
+          description: Timestamp when this object was last updated (or created).
+      required:
+        - id
+        - authorization_reference
+        - total_costs
+        - currency
+        - eft_data
+        - capture_status_code
+        - last_updated
+
+    TerminalActivation:
+      type: object
+      description: |
+        Terminal object used for the activation request. The terminal_id is optional in the
+        activation request as it will be set by the PTP.
+      properties:
+        terminal_id:
+          type: string
+          maxLength: 36
+          description: Uniquely identifies the payment terminal. Optional for activation as it will be set by the PTP.
+        customer_reference:
+          type: string
+          maxLength: 36
+          description: Reference used by the customer (CPO) for this terminal.
+        party_id:
+          type: string
+          maxLength: 3
+          description: Party ID of the PTP that owns this terminal.
+        country_code:
+          type: string
+          maxLength: 2
+          description: ISO-3166 alpha-2 country code of the PTP.
+        address:
+          type: string
+          maxLength: 45
+          description: Street/block name and house number if available.
+        city:
+          type: string
+          maxLength: 45
+          description: City or town.
+        postal_code:
+          type: string
+          maxLength: 10
+          description: Postal code of the terminal location.
+        state:
+          type: string
+          maxLength: 20
+          description: State or province, only to be used when relevant.
+        country:
+          type: string
+          maxLength: 3
+          description: ISO 3166-1 alpha-3 code for the country.
+        coordinates:
+          $ref: "../locations/schema.yaml#/components/schemas/GeoLocation"
+          description: Coordinates of the terminal.
+        invoice_base_url:
+          type: string
+          format: uri
+          description: Base URL for invoice retrieval.
+        invoice_creator:
+          $ref: "#/components/schemas/InvoiceCreator"
+          description: Who creates the invoice for the charging session.
+        reference:
+          type: string
+          maxLength: 36
+          description: Reference information for the terminal.
+        location_ids:
+          type: array
+          description: List of Location IDs this terminal is assigned to.
+          items:
+            type: string
+            maxLength: 36
+        evse_uids:
+          type: array
+          description: List of EVSE UIDs this terminal is assigned to.
+          items:
+            type: string
+            maxLength: 36
+        last_updated:
+          type: string
+          format: date-time
+          description: Timestamp when this Terminal was last updated (or created).
+      required:
+        - last_updated
+
+    # ---- Enums ----
+
+    InvoiceCreator:
+      type: string
+      format: enum
+      description: Defines who creates the invoice for the charging session.
+      enum:
+        - CPO
+        - PTP
+      x-enumDescriptions:
+        CPO: The CPO (Charge Point Operator) creates the invoice.
+        PTP: The PTP (Payment Terminal Provider) creates the invoice.
+
+    CaptureStatusCode:
+      type: string
+      format: enum
+      description: Status of a financial capture.
+      enum:
+        - SUCCESS
+        - PARTIAL_SUCCESS
+        - FAILED
+      x-enumDescriptions:
+        SUCCESS: The capture was fully successful.
+        PARTIAL_SUCCESS: The capture was partially successful.
+        FAILED: The capture failed.

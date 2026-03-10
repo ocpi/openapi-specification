@@ -1,0 +1,168 @@
+openapi: 3.1.0
+info:
+  title: OCPI 2.3.0 - ChargingProfiles Module - Receiver Interface
+  description: |
+    The Receiver Interface (typically implemented by the CPO) allows the Sender (eMSP/SCSP)
+    to request, set, and clear charging profiles.
+  version: 2.3.0
+  contact:
+    name: EVRoaming Foundation
+    url: https://evroaming.org
+externalDocs:
+  description: OCPI 2.3.0 Specification
+  url: https://github.com/ocpi/ocpi/blob/master/mod_charging_profiles.asciidoc
+security:
+  - OCPIToken: []
+
+paths:
+  /chargingprofiles/{session_id}:
+    get:
+      operationId: receiverGetChargingProfile
+      summary: Get active charging profile
+      tags: [ ChargingProfiles ]
+      description: |
+        Gets the ActiveChargingProfile for a specific charging session. The response is sent asynchronously
+        to the given response_url in the query parameters.
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+          description: The unique id of the session for which the charging profile is requested.
+        - in: query
+          name: duration
+          required: true
+          schema:
+            type: integer
+          description: Length of the requested ActiveChargingProfile in seconds.
+        - in: query
+          name: response_url
+          required: true
+          schema:
+            type: string
+            format: uri
+          description: URL that the ActiveChargingProfileResult POST should be sent to.
+      responses:
+        "200":
+          description: Request accepted.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "./schema.yaml#/components/schemas/ChargingProfileResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+
+    put:
+      operationId: receiverPutChargingProfile
+      summary: Set a charging profile
+      tags: [ ChargingProfiles ]
+      description: Creates/updates a charging profile for a specific charging session.
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+          description: The unique id of the session for which the profile is set.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schema.yaml#/components/schemas/SetChargingProfile"
+      responses:
+        "200":
+          description: Request accepted.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "./schema.yaml#/components/schemas/ChargingProfileResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+
+    delete:
+      operationId: receiverDeleteChargingProfile
+      summary: Clear a charging profile
+      tags: [ ChargingProfiles ]
+      description: Clears/removes the charging profile for a specific charging session.
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
+        - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+          description: The unique id of the session for which the profile is to be cleared.
+        - in: query
+          name: response_url
+          required: true
+          schema:
+            type: string
+            format: uri
+          description: URL that the ClearProfileResult POST should be sent to.
+      responses:
+        "200":
+          description: Request accepted.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "./schema.yaml#/components/schemas/ChargingProfileResponse"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"

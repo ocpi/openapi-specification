@@ -37,13 +37,13 @@ jobs:
         run: npm ci
 
       - name: Build OpenAPI Modules
-        run: npm run build:ocpi:2.2.1
+        run: npm run build:ocpi:2.2.1 && npm run build:ocpi:2.3.0
 
       - name: Build OpenAPI Roles
-        run: npm run build:ocpi:cpo:2.2.1 && npm run build:ocpi:msp:2.2.1 && npm run build:ocpi:hub:2.2.1
+        run: npm run build:ocpi:cpo:2.2.1 && npm run build:ocpi:msp:2.2.1 && npm run build:ocpi:hub:2.2.1 && npm run build:ocpi:cpo:2.3.0 && npm run build:ocpi:msp:2.3.0 && npm run build:ocpi:hub:2.3.0
 
       - name: Copy index page
-        run: cp ocpi/2.2.1/index.html dist/ocpi/2.2.1/index.html
+        run: mkdir -p dist/ocpi/2.2.1 dist/ocpi/2.3.0 && cp ocpi/2.2.1/index.html dist/ocpi/2.2.1/index.html && cp ocpi/2.3.0/index.html dist/ocpi/2.3.0/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: OCPI 2.3.0 - Versions Module
+  description: |
+    This is the required base module of OCPI. This module is the starting point for any OCPI connection.
+    Via this module, clients can learn which versions of OCPI a server supports, and which modules
+    it supports for each of the versions.
+
+    This module is symmetric: it has to be implemented by all OCPI implementations.
+
+    The exact URLs to the version endpoints are open for every party to define themselves.
+    The URLs shown here are typical implementation patterns.
+  version: 2.3.0
+  contact:
+    name: EVRoaming Foundation
+    url: https://evroaming.org
+externalDocs:
+  description: OCPI 2.3.0 Specification
+  url: https://github.com/ocpi/ocpi/blob/master/version_information_endpoint.asciidoc
+security:
+  - OCPIToken: []
+
+paths:
+  /versions:
+    get:
+      operationId: getVersions
+      summary: Get supported OCPI versions
+      description: |
+        Fetch information about the supported OCPI versions.
+        This endpoint lists all the available OCPI versions and the corresponding URLs to
+        where version specific details such as the supported endpoints can be found.
+
+        Both CPOs and eMSPs MUST implement such a version endpoint.
+      tags: [ Versions ]
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+      responses:
+        "200":
+          description: Successful response containing a list of supported OCPI versions.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        description: A list of supported OCPI versions.
+                        items:
+                          $ref: "./schema.yaml#/components/schemas/Version"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+
+  /versions/2.3.0:
+    get:
+      operationId: getVersionDetails
+      summary: Get version details for OCPI 2.3.0
+      description: |
+        Fetch information about the supported endpoints and their URLs for this OCPI version.
+
+        Via the version details, the parties can exchange which modules are implemented for a
+        specific version of OCPI, which interface role is implemented, and what the endpoint URL
+        is for this interface.
+
+        Parties that are both CPO and eMSP (or a Hub) can implement one version endpoint that
+        covers both roles.
+
+        Both the CPO and the eMSP MUST implement this endpoint.
+
+        Note: The exact URL structure is open for every party to define themselves.
+        The path shown here is a typical implementation pattern.
+      tags: [ Versions ]
+      parameters:
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
+        - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
+      responses:
+        "200":
+          description: Successful response containing version details with supported endpoints.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "./schema.yaml#/components/schemas/VersionDetails"
+        "400":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+        "401":
+          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"

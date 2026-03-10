@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>OCPI 2.3.0 — OpenAPI Docs</title>
+    <style>
+        :root {
+            --fg: #111827;
+            --muted: #6b7280;
+            --bg: #ffffff;
+            --card: #f9fafb;
+            --border: #e5e7eb;
+            --link: #2563eb;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --fg: #f9fafb;
+                --muted: #9ca3af;
+                --bg: #0b1220;
+                --card: #0f172a;
+                --border: #1f2937;
+                --link: #60a5fa;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+            "Apple Color Emoji", "Segoe UI Emoji";
+            color: var(--fg);
+            background: var(--bg);
+        }
+
+        main {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 3rem;
+        }
+
+        header h1 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.8rem;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 720px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .card h2 {
+            margin: 0 0 0.35rem 0;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            margin: 0 0 0.75rem 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            line-height: 1.7;
+        }
+
+        a {
+            color: var(--link);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .note {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        code {
+            background: rgba(127, 127, 127, 0.15);
+            padding: 0.15rem 0.35rem;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <header>
+        <h1>OCPI 2.3.0 — OpenAPI Docs</h1>
+        <p>Pick a module and interface to view the documentation.</p>
+    </header>
+
+    <section class="grid" aria-label="OCPI modules">
+
+        <div class="card">
+            <h2>Core</h2>
+            <p>Version and Credentials.</p>
+            <ul>
+                <li><a href="./modules/credentials/interface.html">credentials (interface)</a></li>
+                <li><a href="./modules/versions/interface.html">versions (interface)</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>CDRs</h2>
+            <p>Charge Detail Records.</p>
+            <ul>
+                <li><a href="./modules/cdrs/sender.html">sender interface</a></li>
+                <li><a href="./modules/cdrs/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>ChargingProfiles</h2>
+            <p>Smart charging profiles.</p>
+            <ul>
+                <li><a href="./modules/chargingprofiles/sender.html">sender interface</a></li>
+                <li><a href="./modules/chargingprofiles/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Commands</h2>
+            <p>Remote start/stop, reservations, unlock, etc.</p>
+            <ul>
+                <li><a href="./modules/commands/sender.html">sender interface</a></li>
+                <li><a href="./modules/commands/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>HubClientInfo</h2>
+            <p>Hub connectivity information.</p>
+            <ul>
+                <li><a href="./modules/hubclientinfo/sender.html">sender interface</a></li>
+                <li><a href="./modules/hubclientinfo/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Locations</h2>
+            <p>Locations, EVSEs, Connectors and Parking.</p>
+            <ul>
+                <li><a href="./modules/locations/sender.html">sender interface</a></li>
+                <li><a href="./modules/locations/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Sessions</h2>
+            <p>Sessions and charging preferences.</p>
+            <ul>
+                <li><a href="./modules/sessions/sender.html">sender interface</a></li>
+                <li><a href="./modules/sessions/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Tariffs</h2>
+            <p>Tariffs and price components.</p>
+            <ul>
+                <li><a href="./modules/tariffs/sender.html">sender interface</a></li>
+                <li><a href="./modules/tariffs/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Tokens</h2>
+            <p>Tokens and real-time authorization.</p>
+            <ul>
+                <li><a href="./modules/tokens/sender.html">sender interface</a></li>
+                <li><a href="./modules/tokens/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Bookings</h2>
+            <p>Booking locations, calendars and reservations.</p>
+            <ul>
+                <li><a href="./modules/bookings/sender.html">sender interface</a></li>
+                <li><a href="./modules/bookings/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Payments</h2>
+            <p>Payment terminals and financial advice confirmations.</p>
+            <ul>
+                <li><a href="./modules/payments/sender.html">sender interface</a></li>
+                <li><a href="./modules/payments/receiver.html">receiver interface</a></li>
+            </ul>
+        </div>
+    </section>
+    <section class="grid" aria-label="OCPI roles">
+        <div class="card">
+            <h2>OCPI Roles</h2>
+            <p>Combined role-based interfaces built from the OCPI modules.</p>
+            <ul>
+                <li><a href="./cpo-interface.html">CPO interface</a></li>
+                <li><a href="./msp-interface.html">MSP interface</a></li>
+                <li><a href="./hub-interface.html">Hub interface</a></li>
+            </ul>
+        </div>
+    </section>
+</main>
+</body>
+</html>
