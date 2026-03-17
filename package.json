@@ -4,6 +4,7 @@
   "type": "module",
   "devDependencies": {
     "@redocly/cli": "^2.20.4",
+    "@asciidoctor/cli": "^4.0.0",
     "handlebars": "^4.7.8"
   },
   "scripts": {
@@ -11,6 +12,7 @@
     "build:ocpi:2.3.0": "node scripts/build.js ocpi/2.3.0",
 
     "migrate:ocpi:2.2.1-2.3.0": "node scripts/migrate.js ocpi/2.2.1 ocpi/2.3.0",
+    "convert:migration-guide": "asciidoctor dist/migrations/2.2.1-2.3.0/migration-guide.asciidoc -o dist/migrations/2.2.1-2.3.0/migration-guide.html",
 
     "print:rule-list": "docker run tufin/oasdiff checks"
   }
