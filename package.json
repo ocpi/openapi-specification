@@ -10,8 +10,8 @@
     "build:ocpi:2.2.1": "node scripts/build.js ocpi/2.2.1",
     "build:ocpi:2.3.0": "node scripts/build.js ocpi/2.3.0",
 
+    "migrate:ocpi:2.2.1-2.3.0": "node scripts/migrate.js ocpi/2.2.1 ocpi/2.3.0",
 
-    "diff:ocpi:2.2.1-2.3.0": "node scripts/diff.js ocpi/2.2.1/config.json ocpi/2.3.0/config.json",
-    "migrate:ocpi:2.2.1-2.3.0": "node scripts/migrate.js ocpi/2.2.1/config.json ocpi/2.3.0/config.json"
+    "print:rule-list": "docker run tufin/oasdiff checks"
   }
 }

@@ -51,7 +51,7 @@ function buildRoles(versionDir, version, config) {
 }
 
 function buildIndex(versionDir, version, config) {
-  const templatePath = join(dirname(versionDir), 'index.html.hbs');
+  const templatePath = join('scripts', 'index-template.hbs');
   if (!existsSync(templatePath)) return;
 
   console.log(`\nBuilding index for ${version}...`);

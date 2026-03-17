@@ -1,0 +1,40 @@
+= OCPI Migration Guide: {{fromVersion}} → {{toVersion}}
+
+{{#if summary}}
+{{{summary}}}
+
+{{/if}}
+== Module Changes
+
+{{#each addedModules}}
+=== {{label}} Module
+
+The {{label}} module is *new in OCPI {{../toVersion}}*. As this module has no {{../fromVersion}} counterpart, no migration diff is available.
+
+{{/each}}
+
+{{#each removedModules}}
+=== {{label}} Module
+
+The {{label}} module has been *removed in OCPI {{../toVersion}}* and is no longer available.
+
+{{/each}}
+
+{{#each commonModules}}
+{{#if hasContent}}
+=== {{label}} Module
+
+{{#each interfaces}}
+==== {{label}}
+
+include::{{../name}}-{{name}}-changelog.asciidoc[]
+
+{{/each}}
+{{#if hasSchema}}
+==== Object Types
+
+include::{{name}}-schema-changelog.asciidoc[]
+
+{{/if}}
+{{/if}}
+{{/each}}

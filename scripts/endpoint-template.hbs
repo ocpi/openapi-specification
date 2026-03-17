@@ -1,0 +1,16 @@
+[cols="2,1,4",options="header"]
+|===
+| Endpoint | Impact | Changelog
+{{#each endpoints}}
+| `{{operation}} {{path}}` | {{impactLabel}} a|
+{{#each changes}}
+* [{{impactLabel}}] {{{text}}}
+{{/each}}
+{{#if requestBodySummary}}
+* [{{requestBodySummary.impactLabel}}] Request body has {{requestBodySummary.count}} schema changes ({{requestBodySummary.breakdown}})
+{{/if}}
+{{#if responseBodySummary}}
+* [{{responseBodySummary.impactLabel}}] Response body has {{responseBodySummary.count}} schema changes ({{responseBodySummary.breakdown}})
+{{/if}}
+{{/each}}
+|===

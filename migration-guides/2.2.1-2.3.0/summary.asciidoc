@@ -1,0 +1,26 @@
+== Summary
+
+OCPI 2.3.0 focuses on two primary goals:
+
+. *Regulatory Compliance* +
+OCPI 2.3.0 ensures compliance with new laws and regulatory requirements becoming effective in 2025. The changes in this release primarily address transparency obligations, taxation requirements (including North American tax support), accessibility considerations, and enhanced consumer information.
+
+. *Extensibility* +
+OCPI 2.3.0 introduces structural enhancements that enable extensibility of the protocol. It becomes possible to add new modules, fields, and enum values without breaking interoperability between implementations.
+
+OCPI 2.3.0 builds on version 2.2.1 and introduces a limited set of changes. However, adding new modules, fields, and enum values may require implementation updates.
+
+== Protocol Changes
+
+OCPI 2.3.0 changes the protocol from a strictly defined contract to an extensible and forward-compatible contract.
+
+=== Architectural Changes
+
+. *Custom Modules* +
+Next to the modules defined in the OCPI specification, additional custom modules can be defined.
+
+. *Custom Properties* +
+A class datatype is defined as a set of key-value pairs, where the specification defines the required and optional properties and their value types. Additional properties may be included to allow custom extensions.
+
+. *Custom Enumeration Values* +
+An OpenEnum defines a property type with a set of known specified values while allowing additional, custom values. The known values ensure interoperability for common concepts (e.g. connector types), while additional values allow implementers to introduce custom or newly defined variants.

@@ -1,0 +1,53 @@
+{{#if added.length}}
+===== Added Object Types
+
+{{#each added}}
+* `{{this}}`
+{{/each}}
+{{/if}}
+
+{{#if deleted.length}}
+===== Removed Object Types
+
+{{#each deleted}}
+* `{{this}}`
+{{/each}}
+{{/if}}
+
+{{#if modified.length}}
+===== Modified Object Types
+
+{{#each modified}}
+====== {{name}}
+
+{{#if rootChanges.length}}
+{{#each rootChanges}}
+* {{{text}}}
+{{/each}}
+{{/if}}
+{{#if rootEnumValues.length}}
+[cols="2,4",options="header"]
+|===
+| Value | Changelog
+{{#each rootEnumValues}}
+| `{{value}}` | {{changelog}}
+{{/each}}
+|===
+{{/if}}
+{{#if properties.length}}
+[cols="2,4",options="header"]
+|===
+| Property | Changelog
+{{#each properties}}
+| `{{name}}` a| {{#each changes}}* {{{text}}}
+{{/each}}{{#if hasEnumChanges}}
+* Enum updated
+{{/if}}{{#if hasTypeChanges}}
+* Class updated
+{{/if}}
+{{/each}}
+|===
+{{/if}}
+
+{{/each}}
+{{/if}}
