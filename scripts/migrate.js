@@ -194,8 +194,8 @@ mkdirSync(diffDir, { recursive: true });
 const outDir = join('dist', 'migrations', `${fromVersion}-${toVersion}`);
 
 try {
-  generateDiffs(fromConfig, toConfig, commonModules, fromVersionDir, toVersionDir, fromVersion, toVersion, outDir);
-  generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, outDir, outDir);
+  generateDiffs(fromConfig, toConfig, commonModules, fromVersionDir, toVersionDir, fromVersion, toVersion, diffDir);
+  generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, diffDir, outDir);
   generateMigrationGuide(fromConfig, toConfig, commonModules, addedModules, removedModules, fromVersion, toVersion, outDir);
 } finally {
   rmSync(diffDir, { recursive: true, force: true });
