@@ -4,169 +4,149 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
+import yaml from 'js-yaml';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const sort = (values) => [...new Set(values)].sort((a, b) => a.localeCompare(b));
+const getOptionValue = (args, optionName) => args.find((arg) => arg.startsWith(`${optionName}=`))?.slice(optionName.length + 1) || null;
+const classChange = (kind, referencedType) => (referencedType ? `\`${referencedType}\` type ${kind}` : `Property ${kind}`);
+const TOP_LEVEL_KEYS = new Set(['format']);
 
-const STRUCTURAL_KEYS = new Set(['properties', 'items', 'extensions', 'enum', 'required']);
-
-function addNodeChanges(node, changes) {
-  for (const [key, value] of Object.entries(node)) {
-    if (STRUCTURAL_KEYS.has(key)) continue;
-    if (value && typeof value === 'object' && 'from' in value && 'to' in value) {
-      if (key === 'description') {
-        changes.push({ text: 'Description changed', isDescription: true });
-      } else {
-        changes.push({ text: `\`${key}\` changed from \`${value.from}\` to \`${value.to}\`` });
-      }
-    }
-  }
-
-  for (const v of node.enum?.added || []) {
-    changes.push({ enumValue: v, enumChange: 'Enum value added' });
-  }
-  for (const v of node.enum?.deleted || []) {
-    changes.push({ enumValue: v, enumChange: 'Enum value removed' });
-  }
-
-  for (const v of node.required?.added || []) {
-    changes.push({ text: `\`${v}\` became required` });
-  }
-  for (const v of node.required?.deleted || []) {
-    changes.push({ text: `\`${v}\` no longer required` });
-  }
-
-  const enumDescs = node.extensions?.modified?.['x-enumDescriptions'];
-  if (Array.isArray(enumDescs)) {
-    for (const entry of enumDescs) {
-      const name = entry.path?.replace(/^\//, '') || '';
-      if (entry.op === 'replace') {
-        changes.push({ enumValue: name, enumChange: 'Description changed', isDescription: true });
-      }
-    }
-  }
-
-  for (const v of node.properties?.added || []) {
-    changes.push({ text: `Property \`${v}\` added` });
-  }
-  for (const v of node.properties?.deleted || []) {
-    changes.push({ text: `Property \`${v}\` removed` });
-  }
-  for (const name of Object.keys(node.properties?.modified || {})) {
-    changes.push({ text: `Property \`${name}\` modified` });
-  }
-}
-
-function collectNodeChanges(node) {
+function collectFromToChanges(node, allowedKeys = null) {
   const changes = [];
-  addNodeChanges(node, changes);
-  let current = node;
-  while (current.items && typeof current.items === 'object') {
-    current = current.items;
-    addNodeChanges(current, changes);
+  for (const [name, diff] of Object.entries(node || {})) {
+    if (allowedKeys && !allowedKeys.has(name)) continue;
+    if (diff && typeof diff === 'object' && 'from' in diff && 'to' in diff) {
+      changes.push(`\`${name}\` changed from \`${diff.from}\` to \`${diff.to}\``);
+    } else {
+      console.warn(`Unexpected diff format for ${name}:`, diff);
+    }
   }
   return changes;
 }
 
-function filterDescriptions(changes) {
-  return changes.filter(c => !c.isDescription);
+function collectEnumValueChanges(node) {
+  const changes = [];
+  for (const enumValue of node?.enum?.added || []) changes.push(`Enum value ${enumValue} added`);
+  for (const enumValue of node?.enum?.deleted || []) changes.push(`Enum value ${enumValue} deleted`);
+  return changes;
 }
 
-function isTypeStructureChange(c) {
-  return c.text?.startsWith('Property ') ||
-         c.text?.includes('became required') ||
-         c.text?.includes('no longer required');
+function describeInlinePropertyChanges(propertyNode) {
+  return sort([
+    ...collectFromToChanges(propertyNode),
+    ...collectEnumValueChanges(propertyNode),
+  ]);
 }
 
-function splitEnumChanges(changes) {
-  const enumMap = new Map();
-  const other = [];
+function describeTopLevelChanges(schemaDiff) {
+  return sort(collectFromToChanges(schemaDiff, TOP_LEVEL_KEYS));
+}
 
-  for (const c of changes) {
-    if (c.enumValue) {
-      if (!enumMap.has(c.enumValue)) enumMap.set(c.enumValue, []);
-      enumMap.get(c.enumValue).push(c.enumChange);
+function pushChange(changeMap, itemName, text) {
+  changeMap.set(itemName, [...(changeMap.get(itemName) || []), text]);
+}
+
+function pushBatch(changeMap, itemNames, buildText) {
+  for (const itemName of itemNames || []) pushChange(changeMap, itemName, buildText(itemName));
+}
+
+function buildReferencedTypeMap(sourceSchemaPath) {
+  if (!sourceSchemaPath) return new Map();
+  const sourceSchemas = yaml.load(fs.readFileSync(sourceSchemaPath, 'utf8'))?.components?.schemas || {};
+
+  const typeMapBySchema = new Map();
+  for (const [schemaName, schemaDef] of Object.entries(sourceSchemas)) {
+    const schemaProperties = schemaDef?.properties || {};
+    const typeMapByProperty = new Map();
+
+    for (const [propertyName, propertyDef] of Object.entries(schemaProperties)) {
+      const ref = propertyDef?.$ref || propertyDef?.items?.$ref;
+      if (ref) typeMapByProperty.set(propertyName, ref.split('/').pop());
+    }
+
+    if (typeMapByProperty.size > 0) typeMapBySchema.set(schemaName, typeMapByProperty);
+  }
+  return typeMapBySchema;
+}
+
+function buildModifiedSchemaChanges(modifiedSchemas, referencedTypeMapBySchema) {
+  return Object.entries(modifiedSchemas || {}).map(([schemaName, schemaDiff]) => {
+    const changeMap = new Map();
+    const schemaType = schemaDiff?.enum ? 'enum' : 'class';
+    if (schemaType === 'enum') {
+      const addedEnumValues = schemaDiff?.enum?.added || [];
+      const deletedEnumValues = schemaDiff?.enum?.deleted || [];
+      pushBatch(changeMap, addedEnumValues, () => 'Enum value added');
+      pushBatch(changeMap, deletedEnumValues, () => 'Enum value deleted');
     } else {
-      other.push(c);
-    }
-  }
+      const propertyDiff = schemaDiff?.properties || {};
+      const requiredDiff = schemaDiff?.required || {};
+      const propertyTypeMap = referencedTypeMapBySchema.get(schemaName) || new Map();
+      const getReferencedType = (propertyName) => propertyTypeMap.get(propertyName);
 
-  const enumValues = [...enumMap.entries()].map(([value, changelist]) => ({
-    value,
-    changelog: changelist.join(', '),
-  }));
+      pushBatch(changeMap, propertyDiff.added, (propertyName) => classChange('added', getReferencedType(propertyName)));
+      pushBatch(changeMap, propertyDiff.deleted, (propertyName) => classChange('deleted', getReferencedType(propertyName)));
+      pushBatch(changeMap, requiredDiff.added, () => 'Property became required');
+      pushBatch(changeMap, requiredDiff.deleted, () => 'Property became optional');
 
-  return { enumValues, other };
-}
-
-function processSchemas(schemas, ignoreDescriptions) {
-  const modified = [];
-
-  for (const [name, node] of Object.entries(schemas.modified || {})) {
-    let rawRootChanges = [];
-    addNodeChanges(node, rawRootChanges);
-    if (ignoreDescriptions) rawRootChanges = filterDescriptions(rawRootChanges);
-    rawRootChanges = rawRootChanges.filter(c => !c.text?.startsWith('Property '));
-    const { enumValues: rootEnumValues, other: rootChanges } = splitEnumChanges(rawRootChanges);
-
-    const properties = [];
-    for (const v of node.properties?.added || []) {
-      properties.push({ name: v, changes: [{ text: 'Property added' }] });
-    }
-    for (const v of node.properties?.deleted || []) {
-      properties.push({ name: v, changes: [{ text: 'Property removed' }] });
-    }
-    for (const [propName, child] of Object.entries(node.properties?.modified || {})) {
-      let rawChanges = collectNodeChanges(child);
-      if (ignoreDescriptions) rawChanges = filterDescriptions(rawChanges);
-      if (rawChanges.length === 0) continue;
-      const hasTypeChanges = rawChanges.some(isTypeStructureChange);
-      const filtered = rawChanges.filter(c => !isTypeStructureChange(c));
-      const { enumValues, other } = splitEnumChanges(filtered);
-      const hasEnumChanges = enumValues.length > 0;
-      const changes = hasEnumChanges ? other.filter(c => !c.text?.startsWith('`format`')) : other;
-      properties.push({ name: propName, changes, hasEnumChanges, hasTypeChanges });
+      for (const [propertyName, propertyNode] of Object.entries(propertyDiff.modified || {})) {
+        const referencedTypeName = getReferencedType(propertyName);
+        if (referencedTypeName) {
+          pushChange(changeMap, propertyName, classChange('modified', referencedTypeName));
+        } else {
+          const inlineChanges = describeInlinePropertyChanges(propertyNode);
+          if (inlineChanges.length === 0) {
+            pushChange(changeMap, propertyName, 'Property modified');
+          } else {
+            for (const inlineChange of inlineChanges) pushChange(changeMap, propertyName, inlineChange);
+          }
+        }
+      }
     }
 
-    if (rootChanges.length > 0 || rootEnumValues.length > 0 || properties.length > 0) {
-      modified.push({ name, rootChanges, rootEnumValues, properties });
-    }
-  }
-
-  return {
-    added: schemas.added || [],
-    deleted: schemas.deleted || [],
-    modified,
-  };
+    return {
+      name: schemaName,
+      type: schemaType,
+      topLevelChanges: describeTopLevelChanges(schemaDiff),
+      changes: [...changeMap.entries()]
+        .map(([name, entries]) => ({ name, changelog: sort(entries) }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    };
+  }).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function main() {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const args = process.argv.slice(2);
 
   if (args.length < 1 || args.includes('--help')) {
-    console.error('Usage: node generate-schema-changelog.js <diff-json-file> [template-file]');
+    console.error('Usage: node scripts/generate-simple-schema-changelog.js <schema-diff-json-file> [template-file]');
     console.error('Options:');
-    console.error('  --output=<file>          Write to file instead of stdout');
-    console.error('  --ignore-descriptions    Ignore description-only changes');
+    console.error('  --output=<file>              Write to file instead of stdout');
+    console.error('  --source-schema=<file>       Source schema YAML used for property type names');
     process.exit(args.includes('--help') ? 0 : 1);
   }
 
-  let diffFile = args[0];
-  let templateFile = path.join(__dirname, 'schema-template.hbs');
-  let outputFile = null;
-  let ignoreDescriptions = false;
-
-  for (const arg of args.slice(1)) {
-    if (arg.startsWith('--output=')) outputFile = arg.split('=')[1];
-    else if (arg === '--ignore-descriptions') ignoreDescriptions = true;
-    else if (!arg.startsWith('--')) templateFile = arg;
-  }
+  const diffFile = args[0];
+  const templateFile = args.find((arg) => !arg.startsWith('--') && arg !== diffFile)
+    || path.join(__dirname, 'schema-template.hbs');
+  const outputFile = getOptionValue(args, '--output');
+  const sourceSchema = getOptionValue(args, '--source-schema');
 
   const diffData = JSON.parse(fs.readFileSync(diffFile, 'utf8'));
-  const schemas = diffData?.components?.schemas || { added: [], deleted: [], modified: {} };
-  const data = processSchemas(schemas, ignoreDescriptions);
+  const schemaDiff = diffData?.components?.schemas || {};
+  const referencedTypeMapBySchema = buildReferencedTypeMap(sourceSchema);
 
+  const data = {
+    added: sort(schemaDiff.added || []),
+    modified: buildModifiedSchemaChanges(schemaDiff.modified, referencedTypeMapBySchema),
+    deleted: sort(schemaDiff.deleted || []),
+  };
+
+  Handlebars.registerHelper('eq', (a, b) => a === b);
+  Handlebars.registerHelper('lowercase', (value) => value?.toLowerCase() ?? '');
   const template = Handlebars.compile(fs.readFileSync(templateFile, 'utf8'));
-  const output = template(data);
+  const output = template(data).trim();
 
   if (outputFile) {
     fs.writeFileSync(outputFile, output, 'utf8');

@@ -18,36 +18,43 @@
 ===== Modified Object Types
 
 {{#each modified}}
+
 ====== {{name}}
 
-{{#if rootChanges.length}}
-{{#each rootChanges}}
-* {{{text}}}
+{{#if topLevelChanges.length}}
+{{#each topLevelChanges}}
+* {{{this}}}
 {{/each}}
+
 {{/if}}
-{{#if rootEnumValues.length}}
+
+{{#if (eq type "enum")}}
+{{#if changes.length}}
 [cols="2,4",options="header"]
 |===
 | Value | Changelog
-{{#each rootEnumValues}}
-| `{{value}}` | {{changelog}}
+{{#each changes}}
+| `{{name}}` a|
+{{#each changelog}}
+* {{{this}}}
 {{/each}}
-|===
-{{/if}}
-{{#if properties.length}}
-[cols="2,4",options="header"]
-|===
-| Property | Changelog
-{{#each properties}}
-| `{{name}}` a| {{#each changes}}* {{{text}}}
-{{/each}}{{#if hasEnumChanges}}
-* Enum updated
-{{/if}}{{#if hasTypeChanges}}
-* Class updated
-{{/if}}
 {{/each}}
 |===
 {{/if}}
 
+{{else}}
+{{#if changes.length}}
+[cols="2,4",options="header"]
+|===
+| Property | Changelog
+{{#each changes}}
+| `{{name}}` a|
+{{#each changelog}}
+* {{{this}}}
+{{/each}}
+{{/each}}
+|===
+{{/if}}
+{{/if}}
 {{/each}}
 {{/if}}

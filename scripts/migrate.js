@@ -131,7 +131,7 @@ function generateDiffs(fromConfig, toConfig, commonModules, fromVersionDir, toVe
       run(
         `docker run --rm -v ${cwd}/ocpi:/specs:ro -w /specs tufin/oasdiff` +
         ` diff ${fromVersion}/modules/${mod}/schema.yaml ${toVersion}/modules/${mod}/schema.yaml` +
-        ` -f json > ${outputFile}`
+        ` --exclude-elements description,extensions -f json > ${outputFile}`
       );
     }
   }
@@ -153,7 +153,7 @@ function generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, to
       const outputFile = join(outDir, `${mod}-${iface}-changelog.asciidoc`);
       run(
         `node scripts/generate-endpoint-changelog.js ${diffFile}` +
-        ` --output=${outputFile} --ignore-descriptions --summarize-body`
+        ` --output=${outputFile} --ignore-descriptions --collapse-similar`
       );
     }
   }
@@ -164,7 +164,8 @@ function generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, to
     if (!isNonEmptyFile(diffFile)) continue;
 
     const outputFile = join(outDir, `${mod}-schema-changelog.asciidoc`);
-    run(`node scripts/generate-schema-changelog.js ${diffFile} --output=${outputFile} --ignore-descriptions`);
+    const sourceSchema = join('ocpi', fromVersion, 'modules', mod, 'schema.yaml');
+    run(`node scripts/generate-schema-changelog.js ${diffFile} --output=${outputFile} --source-schema=${sourceSchema}`);
   }
 }
 
@@ -193,8 +194,8 @@ mkdirSync(diffDir, { recursive: true });
 const outDir = join('dist', 'migrations', `${fromVersion}-${toVersion}`);
 
 try {
-  generateDiffs(fromConfig, toConfig, commonModules, fromVersionDir, toVersionDir, fromVersion, toVersion, diffDir);
-  generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, diffDir, outDir);
+  generateDiffs(fromConfig, toConfig, commonModules, fromVersionDir, toVersionDir, fromVersion, toVersion, outDir);
+  generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, outDir, outDir);
   generateMigrationGuide(fromConfig, toConfig, commonModules, addedModules, removedModules, fromVersion, toVersion, outDir);
 } finally {
   rmSync(diffDir, { recursive: true, force: true });

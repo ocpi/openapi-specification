@@ -2,15 +2,20 @@
 |===
 | Endpoint | Impact | Changelog
 {{#each endpoints}}
-| `{{operation}} {{path}}` | {{impactLabel}} a|
+{{#each impacts}}
+{{#if (eq @index 0)}}
+.{{../impacts.length}}+| {{../method}} {{../path}} | {{label}} a|
+{{else}}
+| {{label}} a|
+{{/if}}
+{{#each groups}}
+* *{{label}}*
+{{#if changes.length}}
 {{#each changes}}
-* [{{impactLabel}}] {{{text}}}
+** {{{this}}}
 {{/each}}
-{{#if requestBodySummary}}
-* [{{requestBodySummary.impactLabel}}] Request body has {{requestBodySummary.count}} schema changes ({{requestBodySummary.breakdown}})
 {{/if}}
-{{#if responseBodySummary}}
-* [{{responseBodySummary.impactLabel}}] Response body has {{responseBodySummary.count}} schema changes ({{responseBodySummary.breakdown}})
-{{/if}}
+{{/each}}
+{{/each}}
 {{/each}}
 |===
