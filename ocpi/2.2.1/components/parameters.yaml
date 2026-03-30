@@ -13,7 +13,6 @@ components:
       required: true
       schema:
         type: string
-        format: uuid
     X-Correlation-ID:
       in: header
       name: X-Correlation-ID
@@ -25,7 +24,6 @@ components:
       required: true
       schema:
         type: string
-        format: uuid
 
     # ---- Message Routing Headers ----
     # Required for requests to/from functional modules when communicating via a Hub.

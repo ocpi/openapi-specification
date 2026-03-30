@@ -1,24 +1,13 @@
 openapi: 3.1.0
 components:
   securitySchemes:
-    OCPIToken:
+    ocpiAuthorization:
       type: apiKey
       in: header
       name: Authorization
       description: |
         OCPI Token-based authentication. Every OCPI HTTP request MUST add an 'Authorization' header.
         The header uses the format: `Token <base64-encoded-credentials-token>`
-
-        The literal 'Token' indicates that the token-based authentication mechanism is used.
-        After the literal 'Token', there SHALL be one space, followed by the 'encoded token'.
-        The encoded token is obtained by encoding the credentials token to an octet sequence
-        with UTF-8 and then encoding that octet sequence with Base64 (RFC 4648).
-
-        Credentials tokens are exchanged via the Credentials module.
-
-        If the header is missing or the credentials token doesn't match any known party then
-        the server SHALL respond with an HTTP 401 - Unauthorized status code.
-
   headers:
     X-Request-ID:
       description: |
@@ -133,6 +122,14 @@ components:
           $ref: "#/components/headers/X-Request-ID"
         X-Correlation-ID:
           $ref: "#/components/headers/X-Correlation-ID"
+        OCPI-from-country-code:
+          $ref: "#/components/headers/OCPI-from-country-code"
+        OCPI-from-party-id:
+          $ref: "#/components/headers/OCPI-from-party-id"
+        OCPI-to-country-code:
+          $ref: "#/components/headers/OCPI-to-country-code"
+        OCPI-to-party-id:
+          $ref: "#/components/headers/OCPI-to-party-id"
     OCPIUnauthorizedResponse:
       description: |
         Authorization failed. The credentials token is missing, invalid, or does not
@@ -158,6 +155,14 @@ components:
           $ref: "#/components/headers/X-Request-ID"
         X-Correlation-ID:
           $ref: "#/components/headers/X-Correlation-ID"
+        OCPI-from-country-code:
+          $ref: "#/components/headers/OCPI-from-country-code"
+        OCPI-from-party-id:
+          $ref: "#/components/headers/OCPI-from-party-id"
+        OCPI-to-country-code:
+          $ref: "#/components/headers/OCPI-to-country-code"
+        OCPI-to-party-id:
+          $ref: "#/components/headers/OCPI-to-party-id"
     OCPISuccessResponse:
       description: Successful OCPI response.
       headers:
@@ -165,6 +170,14 @@ components:
           $ref: "#/components/headers/X-Request-ID"
         X-Correlation-ID:
           $ref: "#/components/headers/X-Correlation-ID"
+        OCPI-from-country-code:
+          $ref: "#/components/headers/OCPI-from-country-code"
+        OCPI-from-party-id:
+          $ref: "#/components/headers/OCPI-from-party-id"
+        OCPI-to-country-code:
+          $ref: "#/components/headers/OCPI-to-country-code"
+        OCPI-to-party-id:
+          $ref: "#/components/headers/OCPI-to-party-id"
       content:
         application/json:
           schema:
@@ -176,12 +189,117 @@ components:
           $ref: "#/components/headers/X-Request-ID"
         X-Correlation-ID:
           $ref: "#/components/headers/X-Correlation-ID"
+        OCPI-from-country-code:
+          $ref: "#/components/headers/OCPI-from-country-code"
+        OCPI-from-party-id:
+          $ref: "#/components/headers/OCPI-from-party-id"
+        OCPI-to-country-code:
+          $ref: "#/components/headers/OCPI-to-country-code"
+        OCPI-to-party-id:
+          $ref: "#/components/headers/OCPI-to-party-id"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/OCPIResponse"
     OCPINotFoundResponse:
       description: The requested resource was not found.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        X-Correlation-ID:
+          $ref: "#/components/headers/X-Correlation-ID"
+        OCPI-from-country-code:
+          $ref: "#/components/headers/OCPI-from-country-code"
+        OCPI-from-party-id:
+          $ref: "#/components/headers/OCPI-from-party-id"
+        OCPI-to-country-code:
+          $ref: "#/components/headers/OCPI-to-country-code"
+        OCPI-to-party-id:
+          $ref: "#/components/headers/OCPI-to-party-id"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OCPIResponse"
+    OCPIConfigurationErrorResponse:
+      description: OCPI error response for configuration modules (versions, credentials, hubclientinfo). Does not include message routing headers.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                description: |
+                  Optional additional error information.
+                  Content is not strictly defined by OCPI and may be null.
+              status_code:
+                type: integer
+                description: |
+                  OCPI status code.
+                  Any value other than 1000 indicates an error.
+                example: 2001
+              status_message:
+                type: string
+                description: |
+                  Human-readable description of the error.
+                example: "Invalid or missing parameters"
+              timestamp:
+                type: string
+                format: date-time
+                description: |
+                  Timestamp when the error occurred.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        X-Correlation-ID:
+          $ref: "#/components/headers/X-Correlation-ID"
+    OCPIConfigurationUnauthorizedResponse:
+      description: |
+        Authorization failed for a configuration module request. Does not include message routing headers.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status_code:
+                type: integer
+                description: OCPI status code.
+                example: 2000
+              status_message:
+                type: string
+                description: Human-readable error description.
+                example: "Unauthorized - invalid or missing credentials token"
+              timestamp:
+                type: string
+                format: date-time
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        X-Correlation-ID:
+          $ref: "#/components/headers/X-Correlation-ID"
+    OCPIConfigurationSuccessResponse:
+      description: Successful OCPI response for configuration modules. Does not include message routing headers.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        X-Correlation-ID:
+          $ref: "#/components/headers/X-Correlation-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OCPIResponse"
+    OCPIConfigurationCreatedResponse:
+      description: Resource successfully created via a configuration module. Does not include message routing headers.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        X-Correlation-ID:
+          $ref: "#/components/headers/X-Correlation-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OCPIResponse"
+    OCPIConfigurationNotFoundResponse:
+      description: The requested resource was not found (configuration module). Does not include message routing headers.
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
@@ -210,6 +328,9 @@ components:
           description: The time this message was generated.
         data:
           description: Response data object or list of objects.
+      required:
+        - status_code
+        - timestamp
     StatusCode:
       type: integer
       description: |
@@ -316,7 +437,7 @@ components:
         - type
     ImageCategory:
       type: string
-      format: open-enum
+      format: enum
       description: The category of an image to obtain the correct usage in a user presentation. The category has to be set accordingly to the image content in order to guarantee the right usage.
       enum:
         - CHARGER

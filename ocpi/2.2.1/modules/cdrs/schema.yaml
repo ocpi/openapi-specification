@@ -375,7 +375,7 @@ components:
 
     CdrDimensionType:
       type: string
-      format: open-enum
+      format: enum
       description: |
         Defines the type of a CDR dimension. Some of these values are not useful for CDRs,
         and SHALL therefore only be used in Sessions (marked as Session Only).

@@ -17,7 +17,11 @@ externalDocs:
   description: OCPI 2.2.1 Specification
   url: https://github.com/ocpi/ocpi/blob/master/mod_hub_client_info.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
   /hubclientinfo/{country_code}/{party_id}:
@@ -53,11 +57,11 @@ paths:
                       data:
                         $ref: "./schema.yaml#/components/schemas/ClientInfo"
         "400":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationErrorResponse"
         "401":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationUnauthorizedResponse"
         "404":
-          $ref: "../../components/schema.yaml#/components/responses/OCPINotFoundResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationNotFoundResponse"
 
     put:
       operationId: receiverPutClientInfo
@@ -84,10 +88,10 @@ paths:
               $ref: "./schema.yaml#/components/schemas/ClientInfo"
       responses:
         "200":
-          $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationSuccessResponse"
         "201":
-          $ref: "../../components/schema.yaml#/components/responses/OCPICreatedResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationCreatedResponse"
         "400":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationErrorResponse"
         "401":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationUnauthorizedResponse"

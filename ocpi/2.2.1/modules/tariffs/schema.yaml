@@ -242,7 +242,7 @@ components:
 
     TariffType:
       type: string
-      format: open-enum
+      format: enum
       description: Type of tariff.
       enum:
         - AD_HOC_PAYMENT

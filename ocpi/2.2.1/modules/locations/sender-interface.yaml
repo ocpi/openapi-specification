@@ -20,7 +20,11 @@ externalDocs:
   description: OCPI 2.2.1 Specification
   url: https://github.com/ocpi/ocpi/blob/master/mod_locations.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 paths:
   /locations:
     get:
@@ -60,6 +64,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
             X-Total-Count:
               $ref: "../../components/schema.yaml#/components/headers/X-Total-Count"
             X-Limit:
@@ -104,6 +116,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:
@@ -142,6 +162,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:
@@ -181,6 +209,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:

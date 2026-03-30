@@ -55,7 +55,7 @@ components:
 
     VersionNumber:
       type: string
-      format: open-enum
+      format: enum
       description: List of known OCPI versions.
       enum:
         - "2.0"
@@ -83,7 +83,7 @@ components:
 
     ModuleID:
       type: string
-      format: open-enum
+      format: enum
       description: |
         The Module identifiers for each endpoint. Most modules (except Credentials & Registration)
         are optional, but there might be dependencies between modules.

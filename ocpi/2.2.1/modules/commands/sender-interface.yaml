@@ -18,7 +18,11 @@ externalDocs:
   description: OCPI 2.2.1 Specification
   url: https://github.com/ocpi/ocpi/blob/master/mod_commands.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
   /commands/{command}/{uid}:

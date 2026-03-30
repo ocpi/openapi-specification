@@ -222,7 +222,7 @@ components:
 
     TokenType:
       type: string
-      format: open-enum
+      format: enum
       description: The type of token.
       enum:
         - AD_HOC_USER

@@ -18,7 +18,11 @@ externalDocs:
   description: OCPI 2.2.1 Specification
   url: https://github.com/ocpi/ocpi/blob/master/version_information_endpoint.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
   /versions:
@@ -56,9 +60,9 @@ paths:
                         items:
                           $ref: "./schema.yaml#/components/schemas/Version"
         "400":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationErrorResponse"
         "401":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationUnauthorizedResponse"
 
   /versions/2.2.1:
     get:
@@ -100,6 +104,6 @@ paths:
                       data:
                         $ref: "./schema.yaml#/components/schemas/VersionDetails"
         "400":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationErrorResponse"
         "401":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationUnauthorizedResponse"

@@ -12,7 +12,11 @@ externalDocs:
   description: OCPI 2.2.1 Specification
   url: https://github.com/ocpi/ocpi/blob/master/mod_cdrs.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
   /cdrs:
@@ -45,6 +49,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
             Location:
               description: URL to the newly created CDR in the eMSP's system, can be used by the CPO system to perform a GET on the same CDR.
               required: true
@@ -59,17 +71,6 @@ paths:
           $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
         "401":
           $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
-        "409":
-          description: CDR already exists.
-          headers:
-            X-Request-ID:
-              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
-            X-Correlation-ID:
-              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
-          content:
-            application/json:
-              schema:
-                $ref: "../../components/schema.yaml#/components/schemas/OCPIResponse"
 
   /cdrs/{cdr_id}:
     get:
@@ -102,6 +103,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:

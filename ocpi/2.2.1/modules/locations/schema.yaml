@@ -663,7 +663,7 @@ components:
 
     Capability:
       type: string
-      format: open-enum
+      format: enum
       description: The capabilities of an EVSE.
       enum:
         - CHARGING_PROFILE_CAPABLE
@@ -707,7 +707,7 @@ components:
 
     ConnectorType:
       type: string
-      format: open-enum
+      format: enum
       description: The socket or plug standard of the charging point.
       enum:
         - CHADEMO
@@ -811,7 +811,7 @@ components:
 
     ParkingType:
       type: string
-      format: open-enum
+      format: enum
       description: Reflects the general type of the charge point's location. May be used for user information.
       enum:
         - ALONG_MOTORWAY
@@ -830,7 +830,7 @@ components:
 
     ParkingRestriction:
       type: string
-      format: open-enum
+      format: enum
       description: This value, if provided, represents the restriction to the parking spot for different purposes.
       enum:
         - EV_ONLY
@@ -847,7 +847,7 @@ components:
 
     Facility:
       type: string
-      format: open-enum
+      format: enum
       description: Facilities available at or near the charging location.
       enum:
         - HOTEL
@@ -917,7 +917,7 @@ components:
 
     EnvironmentalImpactCategory:
       type: string
-      format: open-enum
+      format: enum
       description: Categories of environmental impact values.
       enum:
         - NUCLEAR_WASTE
