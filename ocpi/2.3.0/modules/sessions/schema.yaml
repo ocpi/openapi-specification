@@ -12,10 +12,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that 'owns' this Session.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that 'owns' this Session (following the ISO-15118 standard).
         id:
@@ -70,6 +72,7 @@ components:
           description: Optional identification of the kWh meter.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO 4217 code of the currency used for this session.
         charging_periods:
@@ -146,6 +149,7 @@ components:
           maxLength: 255
         currency:
           type: string
+          minLength: 3
           maxLength: 3
         charging_periods:
           type: array

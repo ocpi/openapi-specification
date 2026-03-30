@@ -11,10 +11,12 @@ components:
           description: ID for the CPO side.
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that 'owns' this Booking.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that 'owns' this Booking (following the ISO-15118 standard).
         request_id:
@@ -89,10 +91,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that 'owns' this BookingLocation.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that 'owns' this BookingLocation (following the ISO-15118 standard).
         id:
@@ -217,10 +221,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the MSP that requests the booking.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the MSP that requests this booking (following the ISO-15118 standard).
         request_id:
@@ -364,10 +370,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the MSP that 'owns' this Token.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the eMSP that 'owns' this Token (following the ISO-15118 standard).
         uid:

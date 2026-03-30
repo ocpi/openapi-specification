@@ -10,10 +10,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the eMSP that 'owns' this Token.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the eMSP that 'owns' this Token (following the ISO-15118 standard).
         uid:
@@ -59,6 +61,7 @@ components:
           description: Indicates what type of white-listing is allowed.
         language:
           type: string
+          minLength: 2
           maxLength: 2
           description: |
             Language Code ISO 639-1. This optional field indicates the Token owner's preferred
@@ -101,9 +104,11 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
         uid:
           type: string
@@ -128,6 +133,7 @@ components:
           $ref: "#/components/schemas/WhitelistType"
         language:
           type: string
+          minLength: 2
           maxLength: 2
         default_profile_type:
           $ref: "../sessions/schema.yaml#/components/schemas/ProfileType"

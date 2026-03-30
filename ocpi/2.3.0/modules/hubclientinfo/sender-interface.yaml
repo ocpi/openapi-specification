@@ -12,7 +12,11 @@ externalDocs:
   description: OCPI 2.3.0 Specification
   url: https://github.com/ocpi/ocpi/blob/master/mod_hub_client_info.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
   /hubclientinfo:
@@ -57,6 +61,6 @@ paths:
                         items:
                           $ref: "./schema.yaml#/components/schemas/ClientInfo"
         "400":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationErrorResponse"
         "401":
-          $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
+          $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationUnauthorizedResponse"

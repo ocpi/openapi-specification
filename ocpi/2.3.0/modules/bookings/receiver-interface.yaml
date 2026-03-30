@@ -14,7 +14,11 @@ externalDocs:
   description: OCPI 2.3.0 Specification
   url: https://github.com/ocpi/ocpi/blob/master/mod_bookings.asciidoc
 security:
-  - OCPIToken: []
+  - ocpiAuthorization: []
+components:
+  securitySchemes:
+    ocpiAuthorization:
+      $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
   /bookings/{country_code}/{party_id}/booking_locations/{booking_location_id}:
@@ -43,6 +47,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:
@@ -152,6 +164,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:
@@ -260,6 +280,14 @@ paths:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
             X-Correlation-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
           content:
             application/json:
               schema:
@@ -290,7 +318,7 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
         - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
-        - $ref: "./parameters.yaml#/components/parameters/BookingRequestIdParameter"
+        - $ref: "./parameters.yaml#/components/parameters/BookingIdParameter"
       requestBody:
         description: New or updated Booking object.
         required: true
@@ -324,7 +352,7 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
         - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
-        - $ref: "./parameters.yaml#/components/parameters/BookingRequestIdParameter"
+        - $ref: "./parameters.yaml#/components/parameters/BookingIdParameter"
       requestBody:
         description: Partial Booking object with only the fields to update.
         required: true

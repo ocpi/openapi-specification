@@ -18,10 +18,12 @@ components:
           description: Reference used by the customer (CPO) for this terminal.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: Party ID of the PTP that owns this terminal.
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the PTP.
         address:
@@ -42,6 +44,7 @@ components:
           description: State or province, only to be used when relevant.
         country:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO 3166-1 alpha-3 code for the country.
         coordinates:

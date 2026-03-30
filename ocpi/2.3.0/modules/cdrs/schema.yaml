@@ -12,10 +12,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that 'owns' this CDR.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that 'owns' this CDR (following the ISO-15118 standard).
         id:
@@ -66,6 +68,7 @@ components:
           description: Identification of the Meter inside the Charge Point.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: Currency of the CDR in ISO 4217 Code.
         tariffs:
@@ -183,6 +186,7 @@ components:
           description: State or province of the location, only to be used when relevant.
         country:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO 3166-1 alpha-3 code for the country of this location.
         coordinates:
@@ -237,10 +241,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the eMSP that 'owns' this Token.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the eMSP that 'owns' this Token (following the ISO-15118 standard).
         uid:

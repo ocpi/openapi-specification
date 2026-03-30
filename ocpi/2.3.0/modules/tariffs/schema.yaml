@@ -20,10 +20,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that 'owns' this Tariff.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that 'owns' this Tariff (following the ISO-15118 standard).
         id:
@@ -32,6 +34,7 @@ components:
           description: Uniquely identifies the tariff within the CPO's platform (and suboperator platforms).
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 code of the currency of this tariff.
         type:
