@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@redocly/cli": "^2.22.1",
+    "@redocly/cli": "^2.25.2",
     "@asciidoctor/cli": "^4.0.0",
     "handlebars": "^4.7.8"
   },
