@@ -126,7 +126,7 @@ paths:
       operationId: senderPutTerminal
       summary: Update a Terminal
       tags: [ Payments ]
-      description: Update a Terminal object with new information.
+      description: Update a Terminal object with new information. The terminal_id is provided via the URL path parameter.
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
@@ -200,8 +200,6 @@ paths:
       responses:
         "200":
           $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
-        "201":
-          $ref: "../../components/schema.yaml#/components/responses/OCPICreatedResponse"
         "400":
           $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
         "401":
