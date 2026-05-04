@@ -56,7 +56,7 @@ components:
     VersionNumber:
       type: string
       format: enum
-      description: List of known OCPI versions.
+      description: List of known versions.
       enum:
         - "2.0"
         - "2.1"
@@ -87,7 +87,7 @@ components:
       description: |
         The Module identifiers for each endpoint. Most modules (except Credentials & Registration)
         are optional, but there might be dependencies between modules.
-        Parties are allowed to create custom modules with additional custom moduleIDs.
+        If there are dependencies between modules, it will be mentioned in the affected module description.
       enum:
         - cdrs
         - chargingprofiles
@@ -102,7 +102,7 @@ components:
         cdrs: CDRs module
         chargingprofiles: Charging Profiles module
         commands: Commands module
-        credentials: Credentials & Registration module (required for all implementations)
+        credentials: Credentials & Registration module (required for all implementations). The `role` field has no function for this module.
         hubclientinfo: Hub Client Info module
         locations: Locations module
         sessions: Sessions module
