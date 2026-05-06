@@ -545,7 +545,6 @@ components:
             maxLength: 36
         apds_reference:
           type: string
-          maxLength: 36
           description: Reference to an Alliance for Parking Data Standards (APDS) element.
       required:
         - id
