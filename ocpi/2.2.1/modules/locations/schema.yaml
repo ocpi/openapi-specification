@@ -531,11 +531,11 @@ components:
           description: Number of day in the week, from Monday (1) till Sunday (7).
         period_begin:
           type: string
-          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          pattern: '([0-1][0-9]|2[0-3]):[0-5][0-9]'
           description: Begin of the regular period, in local time, given in hours and minutes. Must be in 24h format with leading zeros. Example "18:15".
         period_end:
           type: string
-          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          pattern: '([0-1][0-9]|2[0-3]):[0-5][0-9]'
           description: End of the regular period, in local time, syntax as for period_begin. Must be later than period_begin.
       required:
         - weekday
