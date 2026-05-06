@@ -4,7 +4,7 @@ components:
     TariffIdParameter:
       in: path
       name: tariff_id
-      description: Tariff.id of the Tariff object to retrieve, update, or delete.
+      description: Tariff.id of the Tariff object
       required: true
       schema:
         type: string
