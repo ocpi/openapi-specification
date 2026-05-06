@@ -57,7 +57,7 @@ components:
     VersionNumber:
       type: string
       format: open-enum
-      description: List of known OCPI versions.
+      description: List of known versions.
       enum:
         - "2.0"
         - "2.1"
@@ -107,7 +107,7 @@ components:
         cdrs: CDRs module
         chargingprofiles: Charging Profiles module
         commands: Commands module
-        credentials: Credentials & Registration module (required for all implementations)
+        credentials: Credentials & Registration module (required for all implementations). The `role` field has no function for this module.
         hubclientinfo: Hub Client Info module
         locations: Locations module
         sessions: Sessions module

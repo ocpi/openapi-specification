@@ -88,7 +88,6 @@ components:
       description: |
         The Module identifiers for each endpoint. Most modules (except Credentials & Registration)
         are optional, but there might be dependencies between modules.
-        If there are dependencies between modules, it will be mentioned in the affected module description.
       enum:
         - cdrs
         - chargingprofiles
