@@ -115,6 +115,7 @@ components:
           description: Real amount that was captured at the PSP. This is a consumer price with VAT.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 code of the currency of this tariff.
         eft_data:
