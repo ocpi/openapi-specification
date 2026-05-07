@@ -144,4 +144,33 @@ paths:
         "401":
           $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
         "404":
-          $ref: "../../components/schema.yaml#/components/responses/OCPINotFoundResponse"
+          description: |
+            If the token is not known, the response SHALL contain the status code: 2004: Unknown Token.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status_code:
+                    type: integer
+                    description: OCPI status code
+                    example: 2004
+                  status_message:
+                    type: string
+                    description: An optional status message which may help when debugging
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: The time this message was generated

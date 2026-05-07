@@ -12,8 +12,7 @@ components:
     TokenTypeQueryParameter:
       in: query
       name: type
-      description: Token.type of the Token to retrieve. Default is RFID.
+      description: "Token.type of the Token to retrieve. Default if omitted: RFID"
       required: false
       schema:
-        type: string
-        default: RFID
+        $ref: "./schema.yaml#/components/schemas/TokenType"
