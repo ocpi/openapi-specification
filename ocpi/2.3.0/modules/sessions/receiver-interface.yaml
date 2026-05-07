@@ -96,7 +96,15 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
+          description: |
+            Country code of the CPO performing this PUT on the eMSP’s system.
+            This SHALL be the same value as the country_code in the Session object
+            being pushed.
         - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
+          description: |
+            Party ID (Provider ID) of the CPO performing this PUT on the eMSP’s
+            system. This SHALL be the same value as the party_id in the Session
+            object being pushed.
         - $ref: "./parameters.yaml#/components/parameters/SessionIdParameter"
       requestBody:
         description: New or updated Session object.

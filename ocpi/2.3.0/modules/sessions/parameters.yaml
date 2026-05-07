@@ -4,7 +4,7 @@ components:
     SessionIdParameter:
       in: path
       name: session_id
-      description: Session.id of the Session object to retrieve or update.
+      description: Session.id of the Session object.
       required: true
       schema:
         type: string
