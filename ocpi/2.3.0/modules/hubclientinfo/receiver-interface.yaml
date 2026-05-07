@@ -2,8 +2,9 @@ openapi: 3.1.0
 info:
   title: OCPI 2.3.0 - HubClientInfo Module - Receiver Interface
   description: |
-    The Receiver Interface is implemented by parties connected to a Hub.
-    The Hub pushes ClientInfo objects to connected parties.
+    Typically implemented by all parties connecting to a Hub.
+    With this interface the Hub can push the ClientInfo information to a connected client (eMSP/CPO etc) 
+    Example endpoint structure: /ocpi/cpo/2.0/clientinfo/{country_code}/{party_id}
   version: 2.3.0
   contact:
     name: EVRoaming Foundation
@@ -22,9 +23,13 @@ paths:
   /hubclientinfo/{country_code}/{party_id}:
     get:
       operationId: receiverGetClientInfo
-      summary: Retrieve a ClientInfo object
+      summary: Get a ClientInfo object
+      description: |
+        If the Hub wants to check the status of a ClientInfo object in the connected client's
+        system it might GET the object from the connected client's system for validation purposes.
+        The Hub is the owner of the objects, so it would be illogical if the connected client
+        system had a different status or was missing an object.
       tags: [ HubClientInfo ]
-      description: Retrieve ClientInfo for the specified party as stored by the receiver.
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
@@ -56,15 +61,18 @@ paths:
 
     put:
       operationId: receiverPutClientInfo
-      summary: Create or update a ClientInfo object
+      summary: Push new/updated ClientInfo object to the connect client.
       tags: [ HubClientInfo ]
-      description: Push new or updated ClientInfo from the Hub to a connected party.
+      description: New or updated ClientInfo objects are pushed from the Hub to a connected client.
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
+          description: Country code of the eMSP sending this PUT request to the CPO system.
         - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
+          description: Party ID (Provider ID) of the eMSP sending this PUT request to the CPO system.
       requestBody:
+        description: New or updated ClientInfo object.
         required: true
         content:
           application/json:

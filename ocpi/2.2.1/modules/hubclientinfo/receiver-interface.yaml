@@ -2,13 +2,9 @@ openapi: 3.1.0
 info:
   title: OCPI 2.2.1 - HubClientInfo Module - Receiver Interface
   description: |
-    The Receiver Interface is typically implemented by all parties connecting to a Hub.
-    With this interface the Hub can push ClientInfo information to a connected client (eMSP/CPO etc).
-
-    Endpoint structure: {hubclientinfo_endpoint_url}/{country_code}/{party_id}
-
-    Note: HubClientInfo is a configuration module. Message routing headers (OCPI-to/from-*)
-    SHALL NOT be used with this module.
+    Typically implemented by all parties connecting to a Hub.
+    With this interface the Hub can push the ClientInfo information to a connected client (eMSP/CPO etc) 
+    Example endpoint structure: /ocpi/cpo/2.0/clientinfo/{country_code}/{party_id}
   version: 2.2.1
   contact:
     name: EVRoaming Foundation
@@ -41,7 +37,7 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
       responses:
         "200":
-          description: Successful response containing the requested ClientInfo object.
+          description: Successful response containing the requested ClientInfo.
           headers:
             X-Request-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
@@ -65,20 +61,16 @@ paths:
 
     put:
       operationId: receiverPutClientInfo
-      summary: Push new/updated ClientInfo object
-      description: |
-        New or updated ClientInfo objects are pushed from the Hub to a connected client.
-        When the Hub creates a new ClientInfo object or when any changes to ClientInfo occur,
-        the Hub pushes the update to connected parties.
-
-        When the Hub invalidates a ClientInfo object (deleting is not possible), the Hub will
-        send the updated ClientInfo object with the status field set to SUSPENDED.
+      summary: Push new/updated ClientInfo object to the connect client.
       tags: [ HubClientInfo ]
+      description: New or updated ClientInfo objects are pushed from the Hub to a connected client.
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/CountryCodeParameter"
+          description: Country code of the eMSP sending this PUT request to the CPO system.
         - $ref: "../../components/parameters.yaml#/components/parameters/PartyIdParameter"
+          description: Party ID (Provider ID) of the eMSP sending this PUT request to the CPO system.
       requestBody:
         description: New or updated ClientInfo object.
         required: true
