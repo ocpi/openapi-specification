@@ -219,7 +219,7 @@ components:
           schema:
             $ref: "#/components/schemas/OCPIResponse"
     OCPIConfigurationErrorResponse:
-      description: OCPI error response for configuration modules (versions, credentials, hubclientinfo). Does not include message routing headers.
+      description: OCPI error response for configuration modules (versions, credentials, hubclientinfo).
       content:
         application/json:
           schema:
@@ -252,7 +252,7 @@ components:
           $ref: "#/components/headers/X-Correlation-ID"
     OCPIConfigurationUnauthorizedResponse:
       description: |
-        Authorization failed for a configuration module request. Does not include message routing headers.
+        Authorization failed for a configuration module request.
       content:
         application/json:
           schema:
@@ -275,7 +275,7 @@ components:
         X-Correlation-ID:
           $ref: "#/components/headers/X-Correlation-ID"
     OCPIConfigurationSuccessResponse:
-      description: Successful OCPI response for configuration modules. Does not include message routing headers.
+      description: Successful OCPI response for configuration modules.
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
@@ -286,7 +286,7 @@ components:
           schema:
             $ref: "#/components/schemas/OCPIResponse"
     OCPIConfigurationCreatedResponse:
-      description: Resource successfully created via a configuration module. Does not include message routing headers.
+      description: Resource successfully created via a configuration module.
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
@@ -297,7 +297,7 @@ components:
           schema:
             $ref: "#/components/schemas/OCPIResponse"
     OCPIConfigurationNotFoundResponse:
-      description: The requested resource was not found (configuration module). Does not include message routing headers.
+      description: The requested resource was not found (configuration module).
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
