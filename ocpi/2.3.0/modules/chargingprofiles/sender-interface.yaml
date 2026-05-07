@@ -2,9 +2,15 @@ openapi: 3.1.0
 info:
   title: OCPI 2.3.0 - ChargingProfiles Module - Sender Interface
   description: |
-    The Sender Interface (typically implemented by the eMSP/SCSP) receives asynchronous
-    charging profile results and updated active charging profiles from the CPO.
-  version: 2.3.0
+    The Sender Interface is typically implemented by market roles like the eMSP or SCSP.
+    It receives the asynchronous responses from the Charge Point via the CPO,
+    and updated ActiveChargingProfiles when the CPO knows the profile has changed.
+
+    For the POST method: The URL structure is open for the Sender to define. The URL is provided
+    to the Receiver via the response_url field. The path shown here is a typical implementation pattern.
+
+    For the PUT method: The endpoint structure is {chargingprofiles_endpoint_url}/{session_id}.
+  version: 2.2.1
   contact:
     name: EVRoaming Foundation
     url: https://evroaming.org
@@ -19,14 +25,19 @@ components:
       $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
-  /chargingprofiles/{session_id}:
+  /chargingprofiles/response:
     post:
-      operationId: senderPostChargingProfileResult
+      operationId: senderPostChargingProfileCallback
       summary: Receive asynchronous charging profile result
-      tags: [ ChargingProfiles ]
       description: |
-        Receives the asynchronous result from a GET, PUT, or DELETE charging profile request.
-        The URL to this endpoint is provided in the response_url field.
+        Receive the asynchronous response from the Charge Point.
+        
+        As the Sender interface is called by the Receiver (typically CPO) on the URL given response_url in the Sender request
+        to the Receiver interface. It is up to the implementation of the Sender (typically SCSP) to determine what parameters
+        are put in the URL. The Sender sends a URL in the POST method body to the Receiver. The Receiver is required to
+        use this URL for the asynchronous response by the Charge Point. It is advised to make this URL unique for every
+        request to differentiate simultaneous commands, for example by adding a unique id as a URL segment.
+      tags: [ ChargingProfiles ]
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
@@ -34,14 +45,12 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
-        - in: path
-          name: session_id
-          required: true
-          schema:
-            type: string
-            maxLength: 36
-          description: The unique id of the session.
       requestBody:
+        description: |
+          Choice: one of three.
+          ActiveChargingProfileResult: Result of the GET ActiveChargingProfile request, from the Charge Point.
+          ChargingProfileResult: Result of the PUT ChargingProfile request, from the Charge Point.
+          ClearProfileResult: Result of the DELETE ChargingProfile request, from the Charge Point.
         required: true
         content:
           application/json:
@@ -58,12 +67,26 @@ paths:
         "401":
           $ref: "../../components/schema.yaml#/components/responses/OCPIUnauthorizedResponse"
 
+  /chargingprofiles/{session_id}:
     put:
       operationId: senderPutActiveChargingProfile
-      summary: Receive updated active charging profile
-      tags: [ ChargingProfiles ]
+      summary: Receive updated ActiveChargingProfile
       description: |
-        The CPO sends an updated ActiveChargingProfile when the EVSE's charging profile changes.
+        Updates the Sender (typically SCSP) when the Receiver (typically CPO) knows the ActiveChargingProfile has changed.
+        
+        The Receiver SHALL call this interface every time it knows changes have been made that influence the
+        ActiveChargingProfile for an ongoing session AND the Sender has at least once successfully called the charging
+        profile Receiver PUT interface for this session (SetChargingProfile). If the Receiver doesn’t know the
+        ActiveChargingProfile has changed (EVSE does not notify the Receiver (typically CPO) of the change) it is not
+        required to call this interface.
+        
+        The Receiver SHALL NOT call this interface for any session where the Sender has never, successfully called the
+        charging profile Receiver PUT interface for this session (SetChargingProfile).
+        
+        The Receiver SHALL send a useful relevant duration of ActiveChargingProfile to send to the Sender. As a guide:
+        between 5 and 60 minutes. If the Sender wants a longer ActiveChargingProfile the Sender can always do a GET with
+        a longer duration.
+      tags: [ ChargingProfiles ]
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
@@ -71,14 +94,9 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
-        - in: path
-          name: session_id
-          required: true
-          schema:
-            type: string
-            maxLength: 36
-          description: The unique id of the session.
+        - $ref: "../sessions/parameters.yaml#/components/parameters/SessionIdParameter"
       requestBody:
+        description: The new ActiveChargingProfile. If there is no longer any charging profile active, the ActiveChargingProfile SHALL reflect this by showing the maximum charging capacity of the EVSE.
         required: true
         content:
           application/json:

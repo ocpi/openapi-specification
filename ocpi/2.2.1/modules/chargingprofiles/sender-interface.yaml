@@ -25,21 +25,18 @@ components:
       $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
-  /chargingprofiles/result/{uid}:
+  /chargingprofiles/response:
     post:
       operationId: senderPostChargingProfileCallback
       summary: Receive asynchronous charging profile result
       description: |
         Receive the asynchronous response from the Charge Point.
-        The CPO calls this endpoint (using the response_url provided by the eMSP/SCSP) when
-        the result of the charging profile request is received from the Charge Point.
-
-        The actual URL structure is open for the eMSP/SCSP to define.
-
-        The content of the request body depends on the original request:
-        - GET ActiveChargingProfile → ActiveChargingProfileResult
-        - PUT SetChargingProfile → ChargingProfileResult
-        - DELETE ClearChargingProfile → ClearProfileResult
+        
+        As the Sender interface is called by the Receiver (typically CPO) on the URL given response_url in the Sender request
+        to the Receiver interface. It is up to the implementation of the Sender (typically SCSP) to determine what parameters
+        are put in the URL. The Sender sends a URL in the POST method body to the Receiver. The Receiver is required to
+        use this URL for the asynchronous response by the Charge Point. It is advised to make this URL unique for every
+        request to differentiate simultaneous commands, for example by adding a unique id as a URL segment.
       tags: [ ChargingProfiles ]
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
@@ -48,15 +45,12 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
-        - in: path
-          name: uid
-          description: Unique ID to distinguish between requests (example path segment, actual URL is defined by response_url).
-          required: true
-          schema:
-            type: string
       requestBody:
         description: |
-          Result from the Charge Point. One of: ActiveChargingProfileResult, ChargingProfileResult, or ClearProfileResult.
+          Choice: one of three.
+          ActiveChargingProfileResult: Result of the GET ActiveChargingProfile request, from the Charge Point.
+          ChargingProfileResult: Result of the PUT ChargingProfile request, from the Charge Point.
+          ClearProfileResult: Result of the DELETE ChargingProfile request, from the Charge Point.
         required: true
         content:
           application/json:
@@ -78,15 +72,20 @@ paths:
       operationId: senderPutActiveChargingProfile
       summary: Receive updated ActiveChargingProfile
       description: |
-        The Receiver (typically CPO) sends an updated ActiveChargingProfile to the Sender
-        (typically eMSP or SCSP) when it knows the ActiveChargingProfile has changed.
-
-        The Receiver SHALL call this interface every time it knows changes have been made that
-        influence the ActiveChargingProfile for an ongoing session AND the Sender has at least
-        once successfully called the charging profile Receiver PUT interface for this session.
-
-        The Receiver SHALL NOT call this interface for any session where the Sender has never
-        successfully called the charging profile Receiver PUT interface for this session.
+        Updates the Sender (typically SCSP) when the Receiver (typically CPO) knows the ActiveChargingProfile has changed.
+        
+        The Receiver SHALL call this interface every time it knows changes have been made that influence the
+        ActiveChargingProfile for an ongoing session AND the Sender has at least once successfully called the charging
+        profile Receiver PUT interface for this session (SetChargingProfile). If the Receiver doesn’t know the
+        ActiveChargingProfile has changed (EVSE does not notify the Receiver (typically CPO) of the change) it is not
+        required to call this interface.
+        
+        The Receiver SHALL NOT call this interface for any session where the Sender has never, successfully called the
+        charging profile Receiver PUT interface for this session (SetChargingProfile).
+        
+        The Receiver SHALL send a useful relevant duration of ActiveChargingProfile to send to the Sender. As a guide:
+        between 5 and 60 minutes. If the Sender wants a longer ActiveChargingProfile the Sender can always do a GET with
+        a longer duration.
       tags: [ ChargingProfiles ]
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"

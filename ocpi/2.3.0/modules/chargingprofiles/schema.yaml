@@ -13,16 +13,14 @@ components:
         response_url:
           type: string
           format: uri
-          description: URL that the ChargingProfileResult POST should be sent to. This URL might contain a unique ID to be able to distinguish between requests.
+          description: URL that the ChargingProfileResult POST should be sent to. This URL might contain a unique ID to be able to distinguish between GET ActiveChargingProfile requests.
       required:
         - charging_profile
         - response_url
 
     ChargingProfileResponse:
       type: object
-      description: |
-        The ChargingProfileResponse object is sent in the HTTP response body.
-        It contains the direct response from the CPO, not the response from the Charge Point/EVSE.
+      description: The ChargingProfileResponse object is send in the HTTP response body.
       properties:
         result:
           $ref: "#/components/schemas/ChargingProfileResponseType"
@@ -37,15 +35,15 @@ components:
     ActiveChargingProfileResult:
       type: object
       description: |
-        The ActiveChargingProfileResult object is sent by the CPO to the given response_url in a POST request.
-        It contains the result of the GET (ActiveChargingProfile) request sent by the eMSP.
+        The ActiveChargingProfileResult object is send by the CPO to the given response_url in a POST request.
+        It contains the result of the GET (ActiveChargingProfile) request send by the eMSP.
       properties:
         result:
           $ref: "#/components/schemas/ChargingProfileResultType"
-          description: The EVSE will indicate if it was able to process the request for the ActiveChargingProfile.
+          description: The EVSE will indicate if it was able to process the request for the ActiveChargingProfile
         profile:
           $ref: "#/components/schemas/ActiveChargingProfile"
-          description: The requested ActiveChargingProfile, if the result field is set to ACCEPTED.
+          description: "The requested ActiveChargingProfile, if the result field is set to: ACCEPTED"
       required:
         - result
 
@@ -121,7 +119,7 @@ components:
 
     ChargingProfilePeriod:
       type: object
-      description: Charging profile period structure defines a time period in a charging profile.
+      description: "Charging profile period structure defines a time period in a charging profile, as used in: ChargingProfile"
       properties:
         start_period:
           type: integer
