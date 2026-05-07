@@ -35,17 +35,17 @@ components:
         end_date_time:
           type: string
           format: date-time
-          description: The timestamp when the session was completed/finished, charging might have finished before the session ends, for example EV is full, but parking cost also has to be paid.
+          description: "The timestamp when the session was completed/finished, charging might have finished before the session ends, for example: EV is full, but parking cost also has to be paid."
         session_id:
           type: string
           maxLength: 36
-          description: Unique ID of the Session for which this CDR is sent. Is only allowed to be omitted when the CPO has not implemented the Sessions module or this CDR is the result of a reservation that never became a charging session.
+          description: "Unique ID of the Session for which this CDR is sent. Is only allowed to be omitted when the CPO has not implemented the Sessions module or this CDR is the result of a reservation that never became a charging session, thus no OCPI Session."
         cdr_token:
           $ref: "#/components/schemas/CdrToken"
           description: Token used to start this charging session, including all the relevant information to identify the unique token.
         auth_method:
           $ref: "#/components/schemas/AuthMethod"
-          description: Method used for authentication. Multiple AuthMethods are possible during a charging session. The last method SHALL be used in the CDR.
+          description: "Method used for authentication. Multiple AuthMethods are possible during a charging sessions, for example when the session was started with a reservation: ReserveNow: COMMAND. When the driver arrives and starts charging using a Token that is whitelisted: WHITELIST. The last method SHALL be used in the CDR."
         authorization_reference:
           type: string
           maxLength: 36
@@ -69,9 +69,7 @@ components:
           description: Currency of the CDR in ISO 4217 Code.
         tariffs:
           type: array
-          description: |
-            List of relevant Tariffs, see the Tariffs module. When relevant, a "Free of Charge"
-            tariff should also be in this list, and point to a defined "Free of Charge" Tariff.
+          description: "List of relevant Tariffs, see: Tariff. When relevant, a Free of Charge tariff should also be in this list, and point to a defined Free of Charge Tariff."
           items:
             $ref: "../tariffs/schema.yaml#/components/schemas/Tariff"
         charging_periods:
@@ -113,11 +111,11 @@ components:
         remark:
           type: string
           maxLength: 255
-          description: Optional remark, can be used to provide additional human readable information to the CDR, for example reason why a transaction was stopped.
+          description: "Optional remark, can be used to provide additional human readable information to the CDR, for example: reason why a transaction was stopped."
         invoice_reference_id:
           type: string
           maxLength: 39
-          description: This field can be used to reference an invoice, that will later be sent for this CDR. Making it easier to link a CDR to a given invoice. Maybe even group CDRs that will be on the same invoice.
+          description: This field can be used to reference an invoice, that will later be send for this CDR. Making it easier to link a CDR to a given invoice. Maybe even group CDRs that will be on the same invoice.
         credit:
           type: boolean
           description: When set to true, this is a Credit CDR, and the field credit_reference_id needs to be set as well.
@@ -127,7 +125,7 @@ components:
           description: Is required to be set for a Credit CDR. This SHALL contain the id of the CDR for which this is a Credit CDR.
         home_charging_compensation:
           type: boolean
-          description: When set to true, this CDR is for a charging session using the home charger of the EV Driver for which the energy cost needs to be financially compensated to the EV Driver.
+          description: When set to true, this CDR is for a charging session using the home charger of the EV Driver for which the energy cost needs to be financial compensated to the EV Driver.
         last_updated:
           type: string
           format: date-time
@@ -175,7 +173,7 @@ components:
         postal_code:
           type: string
           maxLength: 10
-          description: Postal code of the location, may only be omitted when the location has no postal code.
+          description: "Postal code of the location, may only be omitted when the location has no postal code: in some countries charging locations at highways don't have postal codes."
         state:
           type: string
           maxLength: 20
@@ -191,23 +189,15 @@ components:
         evse_uid:
           type: string
           maxLength: 36
-          description: |
-            Uniquely identifies the EVSE within the CPO's platform (and suboperator platforms).
-            Allowed to be set to '#NA' when this CDR is created for a reservation that never
-            resulted in a charging session.
+          description: "Uniquely identifies the EVSE within the CPO's platform (and suboperator platforms). For example a database unique ID or the actual EVSE ID. This field can never be changed, modified or renamed. This is the technical identification of the EVSE, not to be used as human readable identification, use the field: evse_id for that. Allowed to be set to: #NA when this CDR is created for a reservation that never resulted in a charging session."
         evse_id:
           type: string
           maxLength: 48
-          description: |
-            Compliant with the specification for EVSE ID from "eMI3 standard version V1.0"
-            "Part 2: business objects." Allowed to be set to '#NA' when this CDR is created for
-            a reservation that never resulted in a charging session.
+          description: "Compliant with the following specification for EVSE ID: \"E-mobility ID-codes: the purpose of IDs, ID usage and ID format\" (https://evroaming.org/contract-evse-ids/). Allowed to be set to: #NA when this CDR is created for a reservation that never resulted in a charging session."
         connector_id:
           type: string
           maxLength: 36
-          description: |
-            Identifier of the connector within the EVSE. Allowed to be set to '#NA' when this CDR
-            is created for a reservation that never resulted in a charging session.
+          description: "Identifier of the connector within the EVSE. Allowed to be set to: #NA when this CDR is created for a reservation that never resulted in a charging session."
         connector_standard:
           $ref: "../locations/schema.yaml#/components/schemas/ConnectorType"
           description: The standard of the installed connector. When this CDR is created for a reservation that never resulted in a charging session, this field can be set to any value and should be ignored by the Receiver.
@@ -216,7 +206,7 @@ components:
           description: The format (socket/cable) of the installed connector. When this CDR is created for a reservation that never resulted in a charging session, this field can be set to any value and should be ignored by the Receiver.
         connector_power_type:
           $ref: "../locations/schema.yaml#/components/schemas/PowerType"
-          description: The type of power at the connector. When this CDR is created for a reservation that never resulted in a charging session, this field can be set to any value and should be ignored by the Receiver.
+          description: When this CDR is created for a reservation that never resulted in a charging session, this field can be set to any value and should be ignored by the Receiver.
       required:
         - id
         - address
@@ -238,7 +228,7 @@ components:
           type: string
           minLength: 2
           maxLength: 2
-          description: ISO-3166 alpha-2 country code of the eMSP that 'owns' this Token.
+          description: ISO-3166 alpha-2 country code of the MSP that 'owns' this Token.
         party_id:
           type: string
           minLength: 3
@@ -247,14 +237,14 @@ components:
         uid:
           type: string
           maxLength: 36
-          description: Unique ID by which this Token can be identified.
+          description: "Unique ID by which this Token can be identified. This is the field used by the CPO's system (RFID reader on the Charge Point) to identify this token. Currently, in most cases: type=RFID, this is the RFID hidden ID as read by the RFID reader, but that is not a requirement. If this is a type=APP_USER Token, it will be a unique, by the eMSP, generated ID."
         type:
           $ref: "../tokens/schema.yaml#/components/schemas/TokenType"
-          description: Type of the token.
+          description: Type of the token
         contract_id:
           type: string
           maxLength: 36
-          description: Uniquely identifies the EV driver contract token within the eMSP's platform.
+          description: 'Uniquely identifies the EV Driver contract token within the eMSP''s platform (and suboperator platforms). Recommended to follow the specification for eMA ID from "E-mobility ID-codes: the purpose of IDs, ID usage and ID format" (https://evroaming.org/contract-evse-ids/).'
       required:
         - country_code
         - party_id
@@ -310,7 +300,7 @@ components:
         encoding_method:
           type: string
           maxLength: 36
-          description: The name of the encoding used in the SignedData field. This is the name given to the encoding by a company or group of companies.
+          description: The name of the encoding used in the SignedData field. This is the name given to the encoding by a company or group of companies. For the German Eichrecht, different solutions are used, all have (somewhat) different encodings like OCMF, Alfen Eichrecht, EDL40 E-Mobility Extension or EDL40 Mennekes .
         encoding_method_version:
           type: integer
           description: Version of the EncodingMethod (when applicable).
@@ -343,8 +333,11 @@ components:
           maxLength: 32
           description: |
             Nature of the value, in other words, the event this value belongs to.
-            Possible values: Start (value at the start of the Session), End (signed value at
-            the end of the Session), Intermediate (signed values taken during the Session).
+            Possible values at moment of writing:
+            - Start (value at the start of the Session)
+            - End (signed value at the end of the Session)
+            - Intermediate (signed values take during the Session, after Start, before End)
+            Others might be added later.
         plain_data:
           type: string
           maxLength: 512
