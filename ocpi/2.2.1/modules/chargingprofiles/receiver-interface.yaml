@@ -42,7 +42,12 @@ paths:
         - $ref: "../sessions/parameters.yaml#/components/parameters/SessionIdParameter"
         - in: query
           name: duration
-          description: Length of the requested ActiveChargingProfile in seconds.
+          description: |
+            Length of the requested ActiveChargingProfile in seconds.
+            Balance the duration between maximizing the information gained and the data usage
+            and computation to execute on the request. Warning: asking for longer duration than necessary
+            might result in additional data costs, while its added value diminishes with every change in the
+            schedule.
           required: true
           schema:
             type: integer
@@ -55,7 +60,9 @@ paths:
             format: uri
       responses:
         "200":
-          description: The request was received by the CPO and will be forwarded to the Charge Point.
+          description: |
+            The response contains the direct response from the Receiver, not the response from the EVSE itself. That
+            information will be sent via an asynchronous POST on the Sender interface if this response is ACCEPTED.
           headers:
             X-Request-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
@@ -105,7 +112,9 @@ paths:
               $ref: "./schema.yaml#/components/schemas/SetChargingProfile"
       responses:
         "200":
-          description: The request was received by the CPO and will be forwarded to the Charge Point.
+          description: |
+            The response contains the direct response from the Receiver (Typically CPO), not the response from the EVSE itself,
+            that will be sent via an asynchronous POST on the Sender interface if this response is ACCEPTED.
           headers:
             X-Request-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
@@ -155,7 +164,9 @@ paths:
             format: uri
       responses:
         "200":
-          description: The request was received by the CPO and will be forwarded to the Charge Point.
+          description: |
+            The response contains the direct response from the Receiver (typically CPO), not the response from the EVSE itself,
+            that will be sent via an asynchronous POST on the Sender interface if this response is ACCEPTED.
           headers:
             X-Request-ID:
               $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"

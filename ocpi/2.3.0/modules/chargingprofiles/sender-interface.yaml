@@ -61,7 +61,40 @@ paths:
                 - $ref: "./schema.yaml#/components/schemas/ClearProfileResult"
       responses:
         "200":
-          $ref: "../../components/schema.yaml#/components/responses/OCPISuccessResponse"
+          description: Successful OCPI response.
+          headers:
+            X-Request-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Request-ID"
+            X-Correlation-ID:
+              $ref: "../../components/schema.yaml#/components/headers/X-Correlation-ID"
+            OCPI-from-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-country-code"
+            OCPI-from-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-from-party-id"
+            OCPI-to-country-code:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-country-code"
+            OCPI-to-party-id:
+              $ref: "../../components/schema.yaml#/components/headers/OCPI-to-party-id"
+          content:
+            application/json:
+              schema:
+                description: OCPI Response envelope.
+                type: object
+                properties:
+                  status_code:
+                    type: integer
+                    description: OCPI status code, 1000 for success.
+                    example: 1000
+                  status_message:
+                    type: string
+                    description: An optional status message which may help when debugging.
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: The time this message was generated.
+                required:
+                  - status_code
+                  - timestamp
         "400":
           $ref: "../../components/schema.yaml#/components/responses/OCPIErrorResponse"
         "401":
