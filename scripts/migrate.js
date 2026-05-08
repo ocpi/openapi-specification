@@ -188,7 +188,7 @@ const addedModules = [...toModules].filter(m => !fromModules.has(m)).sort();
 const commonModules = [...toModules].filter(m => fromModules.has(m)).sort();
 const removedModules = [...fromModules].filter(m => !toModules.has(m)).sort();
 
-const diffDir = join(tmpdir(), `ocpi-migrate-${fromVersion}-${toVersion}`);
+const diffDir = join('dist', `ocpi-migrate-${fromVersion}-${toVersion}`);
 mkdirSync(diffDir, { recursive: true });
 
 const outDir = join('dist', 'migrations', `${fromVersion}-${toVersion}`);
@@ -198,7 +198,7 @@ try {
   generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, diffDir, outDir);
   generateMigrationGuide(fromConfig, toConfig, commonModules, addedModules, removedModules, fromVersion, toVersion, outDir);
 } finally {
-  rmSync(diffDir, { recursive: true, force: true });
+  // rmSync(diffDir, { recursive: true, force: true });
 }
 
 console.log('\nMigration complete');
