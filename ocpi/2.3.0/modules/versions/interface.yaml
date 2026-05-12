@@ -62,7 +62,7 @@ paths:
         "401":
           $ref: "../../components/schema.yaml#/components/responses/OCPIConfigurationUnauthorizedResponse"
 
-  /versions/2.3.0:
+  /version:
     get:
       operationId: getVersionDetails
       summary: Get version details
