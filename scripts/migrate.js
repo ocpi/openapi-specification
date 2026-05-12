@@ -79,6 +79,7 @@ function generateMigrationGuide(fromConfig, toConfig, commonModules, addedModule
       label: fromConfig.modules[mod].label || mod,
       description: fromConfig.modules[mod].description || '',
     })),
+    hasComponents: isNonEmptyFile(join(outDir, 'components-schema-changelog.asciidoc')),
     commonModules: commonModules.map(mod => {
       const commonInterfaces = getCommonInterfaces(fromConfig, toConfig, mod);
       const interfaces = commonInterfaces
@@ -135,6 +136,20 @@ function generateDiffs(fromConfig, toConfig, commonModules, fromVersionDir, toVe
       );
     }
   }
+
+  // Components (shared types like Price, Image, BusinessDetails)
+  const fromComponents = join(fromVersionDir, 'components', 'schema.yaml');
+  const toComponents = join(toVersionDir, 'components', 'schema.yaml');
+
+  if (existsSync(fromComponents) && existsSync(toComponents)) {
+    const outputFile = join(diffDir, `components-schema_diff-${fromVersion}-${toVersion}.json`);
+
+    run(
+      `docker run --rm -v ${cwd}/ocpi:/specs:ro -w /specs tufin/oasdiff` +
+      ` diff ${fromVersion}/components/schema.yaml ${toVersion}/components/schema.yaml` +
+      ` --exclude-elements description,extensions -f json > ${outputFile}`
+    );
+  }
 }
 
 function generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, diffDir, outDir) {
@@ -153,7 +168,7 @@ function generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, to
       const outputFile = join(outDir, `${mod}-${iface}-changelog.asciidoc`);
       run(
         `node scripts/generate-endpoint-changelog.js ${diffFile}` +
-        ` --output=${outputFile} --ignore-descriptions --collapse-similar`
+        ` --output=${outputFile} --specs-dir=ocpi`
       );
     }
   }
@@ -166,6 +181,14 @@ function generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, to
     const outputFile = join(outDir, `${mod}-schema-changelog.asciidoc`);
     const sourceSchema = join('ocpi', fromVersion, 'modules', mod, 'schema.yaml');
     run(`node scripts/generate-schema-changelog.js ${diffFile} --output=${outputFile} --source-schema=${sourceSchema}`);
+  }
+
+  // Components (shared types)
+  const componentsDiffFile = join(diffDir, `components-schema_diff-${fromVersion}-${toVersion}.json`);
+  if (isNonEmptyFile(componentsDiffFile)) {
+    const outputFile = join(outDir, 'components-schema-changelog.asciidoc');
+    const sourceSchema = join('ocpi', fromVersion, 'components', 'schema.yaml');
+    run(`node scripts/generate-schema-changelog.js ${componentsDiffFile} --output=${outputFile} --source-schema=${sourceSchema}`);
   }
 }
 
@@ -198,7 +221,7 @@ try {
   generateChangelogs(fromConfig, toConfig, commonModules, fromVersion, toVersion, diffDir, outDir);
   generateMigrationGuide(fromConfig, toConfig, commonModules, addedModules, removedModules, fromVersion, toVersion, outDir);
 } finally {
-  // rmSync(diffDir, { recursive: true, force: true });
+  rmSync(diffDir, { recursive: true, force: true });
 }
 
 console.log('\nMigration complete');
