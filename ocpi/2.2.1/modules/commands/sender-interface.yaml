@@ -25,18 +25,19 @@ components:
       $ref: "../../components/schema.yaml#/components/securitySchemes/ocpiAuthorization"
 
 paths:
-  /commands/{command}/{uid}:
+  /commands:
     post:
       operationId: senderPostCommandResult
       summary: Receive asynchronous command result
-      description: |
-        Receive the asynchronous response from the Charge Point.
-        The CPO calls this endpoint (using the response_url provided by the eMSP) when
-        the result of the command is received from the Charge Point.
-
-        The actual URL structure is open for the eMSP to define. The URL is provided to
-        the CPO by the eMSP in the original command request via the response_url field.
       tags: [ Commands ]
+      description: |
+        It is up to the implementation of the eMSP to determine what parameters are put in the URL. The eMSP sends a URL
+        in the POST method body to the CPO. The CPO is required to use this URL for the asynchronous response by the
+        Charge Point. It is advised to make this URL unique for every request to differentiate simultaneous commands, for
+        example by adding a unique id as a URL segment.
+        
+        No structure defined. This is open to the Sender to define, the URL is provided to the Receiver by the Sender in the
+        POST to the Receiver interface. Therefor OCPI does not define variables.
       parameters:
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Request-ID"
         - $ref: "../../components/parameters.yaml#/components/parameters/X-Correlation-ID"
@@ -44,18 +45,6 @@ paths:
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-from-party-id"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-country-code"
         - $ref: "../../components/parameters.yaml#/components/parameters/OCPI-to-party-id"
-        - in: path
-          name: command
-          description: The type of command this result is for (example path segment, actual URL is defined by response_url).
-          required: true
-          schema:
-            $ref: "./schema.yaml#/components/schemas/CommandType"
-        - in: path
-          name: uid
-          description: Unique ID to distinguish between requests (example path segment, actual URL is defined by response_url).
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Result of the command request, from the Charge Point.
         required: true
