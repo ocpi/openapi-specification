@@ -108,6 +108,7 @@ components:
       required: true
       schema:
         type: string
+        minLength: 2
         maxLength: 2
     PartyIdParameter:
       in: path
@@ -116,4 +117,5 @@ components:
       required: true
       schema:
         type: string
+        minLength: 3
         maxLength: 3
